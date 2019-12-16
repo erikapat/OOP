@@ -1,2 +1,2 @@
 
-Java's exmaples :)
+Java's examples :)
