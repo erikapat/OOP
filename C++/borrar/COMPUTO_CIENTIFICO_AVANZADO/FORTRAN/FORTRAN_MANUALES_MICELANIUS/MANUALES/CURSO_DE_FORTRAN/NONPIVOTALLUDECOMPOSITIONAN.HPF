@@ -1,0 +1,181 @@
+   MODULE Mapping_Info
+    !HPF$ PROCESSORS, DIMENSION(2) :: P
+   END MODULE Mapping_Info
+
+   MODULE LU_Decomp_Solver
+
+    IMPLICIT NONE
+
+   CONTAINS
+
+    SUBROUTINE LU_Decomp(LU,rc)
+     USE Mapping_Info
+     REAL, DIMENSION(:,:), INTENT(INOUT) :: LU
+     INTEGER, INTENT(OUT)                :: rc
+     REAL, DIMENSION(SIZE(LU,1))         :: MaxElts
+     REAL, PARAMETER                     :: Tol=1.0e-20
+     INTEGER                             :: i, j, k
+     INTEGER                             :: n
+!HPF$ DISTRIBUTE *(*,CYCLIC) ONTO *P     :: LU
+!HPF$ DISTRIBUTE (CYCLIC) ONTO P         :: MaxElts
+      n = SIZE(LU,1)
+      rc    = 0
+      MaxElts = MAXVAL(ABS(LU),DIM=2)
+       IF (ANY(MaxElts < Tol)) THEN
+        rc = -1
+       ELSE
+        n = SIZE(LU,DIM=1)
+        DO k=1,n-1
+         LU(k+1:n,k) = LU(k+1:n,k)/LU(k,k)
+         FORALL(i=k+1:n, j=k+1:n) LU(i,j) = LU(i,j)-LU(i,k)*LU(k,j)
+        END DO
+       END IF
+    END SUBROUTINE LU_Decomp
+
+!------------------------------------------------------------------------
+
+
+    SUBROUTINE Forward_Substitution(L,B,y,rc)
+     USE Mapping_Info
+     REAL, DIMENSION(:,:), INTENT(IN) :: L
+     REAL, DIMENSION(:), INTENT(IN)   :: B
+     REAL, DIMENSION(:), INTENT(OUT)  :: y
+     INTEGER, INTENT(OUT)             :: rc
+     INTEGER                          :: n, i
+
+!HPF$ ALIGN (:) WITH *L(:,*)          :: B, y
+!HPF$ DISTRIBUTE *(*,CYCLIC) ONTO *P  :: L
+
+      n = SIZE(L,DIM=1)
+      rc = 0
+
+! calculate first element of Y: y(1) = b(1)/L(1,1). L(1,1) is always 1
+
+      y(1) = b(1)
+
+! Calculate rest of Y. This loop is SEQUENTIAL due to data dependencies
+
+      DO i=2,N
+       y(i) = b(i) - SUM(L(i,1:i-1) * y(1:i-1))
+      END DO
+
+    END SUBROUTINE Forward_Substitution
+
+!------------------------------------------------------------------------
+
+    SUBROUTINE Backward_Substitution(U,x,y,rc)
+     USE Mapping_Info
+     REAL, DIMENSION(:,:), INTENT(IN) :: U
+     REAL, DIMENSION(:), INTENT(IN)   :: y
+     REAL, DIMENSION(:), INTENT(OUT)  :: x
+     INTEGER, INTENT(OUT)             :: rc
+     INTEGER                          :: n, i
+
+!HPF$ ALIGN (:) WITH *U(:,*)          :: x, y
+!HPF$ DISTRIBUTE *(*,CYCLIC) ONTO *P  :: U
+
+      n = SIZE(U,DIM=1)
+      rc = 0
+
+! Calculate first element of X:
+
+      x(n) = y(n)/U(n,n)
+
+! Calculate rest of X. This loop is SEQUENTIAL due to data dependencies
+
+      DO i=N-1,1,-1
+       X(i) = (Y(i) - SUM(U(i,i+1:N) * X(i+1:N))) / U(i,i)
+      END DO
+
+    END SUBROUTINE Backward_Substitution
+
+
+   END MODULE LU_Decomp_Solver
+
+
+   PROGRAM LU_Decomp_Test
+    USE Mapping_Info
+    USE LU_Decomp_Solver
+    IMPLICIT NONE
+    REAL, DIMENSION(:,:), ALLOCATABLE :: A
+    REAL, DIMENSION(:), ALLOCATABLE   :: B, x, y
+    INTEGER                           :: rc, n
+    LOGICAL                           :: OK = .TRUE.
+
+    !HPF$ ALIGN WITH A(:,*)            :: B, x, y
+    !HPF$ DISTRIBUTE (*,CYCLIC) ONTO P :: A
+
+     n = 3
+
+     ALLOCATE (A(n,n), STAT = rc)
+     IF (rc == 0) THEN
+      A = RESHAPE((/ 1,  2,  3, &
+                     2, -1,  1, &
+                     3,  4, -1 /), (/3,3/), ORDER=(/2,1/))
+     ELSE
+      OK = .FALSE.
+     END IF
+
+     ALLOCATE (B(n), STAT = rc)
+     IF (rc == 0) THEN
+      B = (/ 14, 3, 8 /)
+     ELSE
+      OK = .FALSE.
+     END IF
+
+     ALLOCATE (X(n), STAT = rc)
+     IF (rc /= 0) THEN
+      OK = .FALSE.
+     END IF
+
+     ALLOCATE (Y(n), STAT = rc)
+     IF (rc /= 0) THEN
+      OK = .FALSE.
+     END IF
+
+     IF (OK) THEN
+      CALL LU_Decomp(A,rc)
+
+      IF (rc == 0) THEN
+
+       PRINT*, "The LU Matrix:"
+
+       DO rc = 1,n
+        PRINT*, A(rc,:)
+       END DO
+
+      END IF
+
+      CALL Forward_Substitution(A,b,y,rc)
+
+      IF (rc == 0) THEN
+
+       CALL Backward_Substitution(A,x,y,rc)
+
+       IF (rc == 0) THEN
+
+        PRINT*, "Y vector is"
+        PRINT*, Y
+        PRINT*, " "
+        PRINT*, "The solution X is"
+        PRINT*, X
+
+       ELSE
+
+        PRINT*, "Error during Backward Substitution"
+
+       END IF
+
+      ELSE
+
+       PRINT*, "Error during Forward Substitution"
+
+      END IF
+
+     ELSE
+      PRINT*, "Not enough room to ALLOCATE all the required arrays"
+     END IF
+
+   END PROGRAM LU_Decomp_Test
+
+

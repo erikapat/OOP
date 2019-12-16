@@ -1,0 +1,19 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: matriz_por_vector - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "link.exe kernel32.lib /nologo /subsystem:console /incremental:no /pdb:"Debug/matriz_por_vector.pdb" /debug /machine:I386 /out:"Debug/matriz_por_vector.exe" /pdbtype:sept  ".\Debug\matriz_por_vector.obj" ".\Debug\mm.obj" "
+<h3>Output Window</h3>
+Linking...
+
+
+
+<h3>Results</h3>
+matriz_por_vector.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

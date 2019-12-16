@@ -1,0 +1,10 @@
+cd : cambiar directorio
+dir: ver contenido de directorio actual
+gcc nombre_archivo.c -c : para crear .obj
+gcc nombre_archivo.O -O : para crear un ejecutable
+a.exe : para ejecutar el programa
+
+OBSERVACIÓN: TIENES QUE EJECUTA EL PROGRAMITA setenv.bat desde
+patalla de d.o.s. si no, no va a funcionar...
+para ello usa cd para cambiar de directorio y dir para ver lo
+que contiene el directorio actual.

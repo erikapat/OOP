@@ -1,0 +1,1510 @@
+This is the documentation for SET's Editor.
+
+Copyright (C) 1996, 1997 Salvador Eduardo Tropea
+
+This documentation may be freely distributed, provided this copyright notice
+is left intact on all copies.
+
+EDITOR
+******
+
+  Table of Contents
+  *****************
+
+1 Introduction
+  1.1 What is SETs Editor?
+  1.2 Requirements
+  1.3 About the Author
+2 Available commands
+  2.1 Conventions
+  2.2 Cursor movement
+  2.3 Insert and Delete
+  2.4 Blocks
+  2.4.1 Block modes
+  2.4.2 Selecting with the mouse or Shift
+  2.4.2.1 Using the mouse
+  2.4.2.2 Using the Shift key
+  2.4.3 Indentation
+  2.4.4 Rectangular Blocks
+  2.5 Pseudo Macros
+  2.5.1 Please enlighten me - what is that?
+  2.5.2 How can I customize that?
+  2.6 Miscellaneous
+3 Keyboard
+  3.1 How to configure the keyboard
+  3.2 A program to find the scancodes
+4 Editing Modes
+  4.1 Overwrite
+  4.2 Autoindent
+  4.3 Real Tabs
+  4.4 Persistent Blocks
+  4.5 Intelligent C indent
+  4.5.1 Can you explain to me more about the behavior of this mode?
+  4.5.2 Do you have more examples?
+  4.6 Column cursor
+  4.7 Row cursor
+  4.8 Match pair highlight
+  4.9 Syntax Highlight
+5 Calculator
+6 How to contact me
+  6.1 Bugs
+7 Index
+8 Index of key commands
+
+1 Introduction
+**************
+
+   This document describes the use of the SET's editor; this editor was
+designed for programmers and to be used alone or inside of the RHIDE.
+
+   This documentation may be freely distributed with the editor or the RHIDE
+package or any part thereof, provided this copyright notice is left intact on
+all copies.
+
+   Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission notice
+identical to this one.
+
+  People who helped me develop the editor:
+
+   * ROBERT HîHNE <Robert.Hoehne@Mathematik.TU-Chemnitz.DE>
+     (with some base routines, a lot of patches and reports)
+
+   * MOLNAR LASZLO <molnarl@cdata.tvnet.hu>
+     (with the calculator, tests and a lot of ideas)
+
+   * MAREK HABERSACK <grendel@ananke.amu.edu.pl>
+     (with tests and a lot of ideas)
+
+   * FRANK DONAHOE <fdonahoe@wilkes1.wilkes.edu>
+     (with a lot of corrections to this text)
+
+  The editor is freeware, but the source-code of this editor is copyrighted by
+Salvador Eduardo Tropea.  If you want to include the editor in your
+application, using the whole code or only a part contact at first me
+<salvador@inti.edu.ar>
+
+  This editor is included in the Robert Hîhne's RHIDE as a replacement for the
+original TVision's editor class.
+
+1.1 What is SETs Editor?
+========================
+
+  SET's editor is an editor designed to be used by programmers; the main target
+of the editor is C and C++ code but Pascal and Clipper are supported too.
+
+  The editor was designed to be very similar to the DOS standard editors for C,
+especially to Borland's IDE editor. The editor supports a lot of WordStar
+style commands plus some CUA commands, so if you have used any editor that
+uses these kinds of commands you'll find my editor very familiar. On the
+other hand if you have never used a DOS editor, especially if you use VI on
+UNIX machines you'll feel lost. You can configure the keyboard but this
+feature is relatively limited.  (Section 3.1).
+
+1.2 Requirements
+================
+
+  For now I only plan to distribute my editor inside of RHIDE.  Requirements
+are the requirements of RHIDE.
+
+1.3 About the Author
+====================
+
+The editor was created by Salvador Eduardo Tropea with some code contributed
+by Robert Hîhne
+
+     E-Mail: Salvador Eduardo Tropea <salvador@inti.edu.ar>
+     
+     Telephone: (+541) 759-0013
+     Postal Address:
+     Salvador E. Tropea
+     CurapaligÅe 2124
+     (1678) Caseros - 3 de Febrero
+     Prov: Buenos Aires
+     Argentina
+
+2 Available commands
+********************
+
+  In this section I will explain the features of the editor and the default
+configuration for the keyboard. If you want to change some assignment of a
+key consult "configure the keyboard".   (Section 3.1).
+
+  Read the conventions topic first to understand my way of indicating
+keystrokes.
+
+  In the description of each command I'll include the internal name used by the
+editor because this name is needed to configure the keyboard.
+
+2.1 Conventions
+===============
+
+  I'll use some conventions when talking about the keystrokes needed to trigger
+some command. So here is what I use:
+
+  The key named <Ctrl> or Control is represented as `^'; this key doesn't have
+any effect used alone inside of the editor so the `^' symbol will be used only
+in conjunction with the name of some key indicating that you must press the
+two keys at the same time. For example, `^A' is <Ctrl> and <A> at the same
+time.  When I say "at the same time" that means: press `<Ctrl>', hold it, and
+press the other key; that's the reason to put <A> after <Ctrl>.
+
+  To indicate a sequence of keystrokes I'll use a dash to separate the keys. For
+example, `^K-B' is <Ctrl> and <K> at the same time, and then press <B>, of
+course release `^K' first.
+
+  To indicate keys pressed at the same time other than `^x' I'll use a plus.
+For example, `Shift+^Insert' is the three keys at the same time!
+
+  I don't think that you are stupid; the editor is written for programmers, but
+I wanted to make that clear to avoid problems ;-).
+
+2.2 Cursor movement
+===================
+
+   * Character left
+     - Command: cmbCharLeft
+     - Key: Left arrow
+     - Alternate: ^S
+
+   * Character right
+     - Command: cmbCharRight
+     - Key: Right arrow
+     - Alternate: ^D
+
+   * Word left
+     - Command: cmbWordLeft
+     - Key: ^Left arrow
+     - Alternate: ^A
+
+   * Word right
+     - Command: cmbWordRight
+     - Key: ^Right arrow
+     - Alternate: ^F
+
+   * Line up
+     - Command: cmbLineUp
+     - Key: Up arrow
+     - Alternate: ^E
+
+   * Line down
+     - Command: cmbLineDown
+     - Key: Down arrow
+     - Alternate: ^X
+
+   * Scroll the screen one line up
+     - Command: cmbScrollUp
+     - Key: ^W
+     - Alternate:
+
+   * Scroll the screen one line down
+     - Command: cmbScrollDown
+     - Key: ^Z
+     - Alternate:
+
+   * Page up
+     - Command: cmbPageUp
+     - Key: PgUp
+     - Alternate: ^R
+
+   * Page down
+     - Command: cmbPageDown
+     - Key: PgDn
+     - Alternate: ^C
+
+   * Beginning of line
+     - Command: cmbLineStart
+     - Key: Home
+     - Alternate: ^Q-S
+
+   * End of line
+     - Command: cmbLineEnd
+     - Key: End
+     - Alternate: ^Q-D
+
+   * Top of window
+     - Command: cmbFirstLineInScreen
+     - Key: ^Q-E
+     - Alternate: ^Home
+
+   * Bottom of window
+     - Command: cmbLastLineInScreen
+     - Key: ^Q-X
+     - Alternate: ^End
+
+   * Top of file
+     - Command: cmbTextStart
+     - Key: ^Q-R
+     - Alternate: ^PgUp
+
+   * Bottom of file
+     - Command: cmbTextEnd
+     - Key: ^Q-C
+     - Alternate: ^PgDn
+
+2.3 Insert and Delete
+=====================
+
+   * Delete the character under cursor
+     - Command: cmbDelChar
+     - Key: Del
+     - Alternate: ^G
+
+   * Delete character to left
+     - Command: cmbBackSpace
+     - Key: Backspace
+     - Alternate: ^H
+
+   * Delete line
+     - Command: cmbDelLine
+     - Key: ^Y
+     - Alternate:
+
+   * Delete to end of line
+     - Command: cmbDelEnd
+     - Key: ^Q-Y
+     - Alternate: Shift+^Y
+
+   * Delete to start of line
+     - Command: cmbDelStart
+     - Key: ^Q-H
+     - Alternate:
+
+   * Delete word at left
+     - Command: cmbDelWord
+     - Key: ^T
+     - Alternate:
+
+   * Delete word at right
+     - Command: cmbDelPrevWord
+     - Key: ^Backspace
+     - Alternate:
+
+   * Insert line
+     - Command: cmbNewLine
+     - Key: Enter
+     - Alternate: ^N
+
+   * Insert mode on/off
+     - Command: cmbInsMode
+     - Key: Ins
+     - Alternate: ^V
+
+  When you are in insert mode all the typed characters are inserted in the
+text, but when the insert mode is off the typed characters replace the old
+text. The editor starts with insert mode on. You can quickly know the mode by
+the cursor shape. When the insert mode is on, the cursor is only a line, but
+when it is off, the cursor is block shaped.
+
+2.4 Blocks
+==========
+
+  A block is a selected portion of the text. You can copy, delete, etc. blocks
+of text. The associated commands are:
+
+   * Move to beginning of block
+     - Command: cmbGoBeginBlock
+     - Key: ^Q-B
+     - Alternate:
+
+   * Move to end of block
+     - Command: cmbGoEndBlock
+     - Key: ^Q-K
+     - Alternate:
+
+   * Set beginning of block
+     - Command: cmbStartSelect
+     - Key: ^K-B
+     - Alternate:
+
+   * Set end of block
+     - Command: cmbEndSelect
+     - Key: ^K-K
+     - Alternate:
+
+   * Hide/Show block
+     - Command: cmbHideSelect
+     - Key: ^K-H
+     - Alternate:
+
+   * Mark line
+     - Command: cmbMarkLine
+     - Key: ^K-L
+     - Alternate:
+
+   * Mark word
+     - Command: cmbMarkWord
+     - Key: ^K-T
+     - Alternate:
+
+   * Delete block and copy it to the Clipboard
+     - Command: cmbCut
+     - Key: ^K-Y
+     - Alternate: Shift+Del
+
+   * Copy the selected block
+     - Command: cmbCopyBlock
+     - Key: ^K-C
+     - Alternate:
+
+   * Move block
+     - Command: cmbMoveBlock
+     - Key: ^K+V
+     - Alternate:
+
+   * Copy to Clipboard
+     - Command: cmbCopy
+     - Key: ^Ins
+     - Alternate:
+
+   * Delete block
+     - Command: cmbClear
+     - Key: ^Del
+     - Alternate:
+
+   * Paste from Clipboard
+     - Command: cmbPaste
+     - Key: Shift+Ins
+     - Alternate:
+
+   * Read block from disk
+     - Command: cmbReadBlock
+     - Key: ^K-R
+     - Alternate: Shift+^R
+
+   * Write block to disk
+     - Command: cmbWriteBlock
+     - Key: ^K-W
+     - Alternate: Shift+^W
+
+   * Replace the block by the Clipboard block
+     - Command: cmbReplaceSelect
+     - Key: Shift+^Ins
+     - Alternate:
+
+   * Convert to Uppercase
+     - Command: cmbToUpper
+     - Key: ^K-M
+     - Alternate:
+
+   * Convert to Lowercase
+     - Command: cmbToLower
+     - Key: ^K-O
+     - Alternate:
+
+   * Report the length of the block
+     - Command: cmbSelLength
+     - Key: ^Q-L
+     - Alternate:
+
+2.4.1 Block modes
+-----------------
+
+  There are two block modes. One is the mode that the old editor of RHIDE used.
+This mode is used in CUA programs. The other is called Persistent Blocks.
+
+  In the normal mode each time you select a block and then insert anything in
+it (with `cmbPaste' or by typing anything) the selected block is deleted and
+is replaced by the new text.
+
+  In persistent blocks the selection is not replaced and is not lost when you
+move the cursor. From this comes the name "Persistent." In this mode you can
+use `cmbMoveBlock' and `cmbCopyBlock' without using the Clipboard. In
+addition you can apply indentations to the block ( (Section 2.4.3)), search
+only inside it, etc. That's what makes this mode much more powerful than the
+former. If you really like to replace the selected text by the selection of
+the Clipboard, that's the default behaviour of the first mode. You can use
+the `cmbReplaceSelect' command to achieve the same in the Persistent Blocks
+mode.
+
+2.4.2 Selecting with the mouse or Shift
+---------------------------------------
+
+  The described commands for selecting a block, `cmbStartSelect' and
+`cmbEndSelect', are good but not so quick. There are other ways to do this.
+
+2.4.2.1 Using the mouse
+.......................
+
+  Using the mouse you need only point to the start place, hold the left button
+pressed and move the mouse to the end point of your block.
+
+  To select a word with the mouse just double click on it.
+
+2.4.2.2 Using the Shift key
+...........................
+
+  Using the <Shift> key you only need to move the cursor to the start point,
+hold `<Shift>' pressed and move the cursor to the end point with any of the
+available cursor commands.  (Section 2.2).
+
+2.4.3 Indentation
+-----------------
+
+  You can indent or unindent a block of text using various commands, but you
+must keep in mind that for now the editor is limited in the following:
+(Section 4.3) If you are using tabs to indent your text, don't mix the tabs
+with spaces and, if you are using spaces to indent, don't mix them with real
+tabs.
+
+   * Indent block one position adding a space
+     - Command: cmbIndentBlkOne
+     - Key: ^K-I
+     - Alternate: Shift+^I
+
+   * Unindent block one character - not an x position
+     - Command: cmbUnIndentBlkOne
+     - Key: ^K-U
+     - Alternate: Shift+^U
+
+   * Indent block
+     - Command: cmbIndentBlk
+     - Key: ^K-Tab
+     - Alternate:
+
+   * Unindent block
+     - Command: cmbUnIndentBlk
+     - Key: ^K-Shift+Tab
+     - Alternate:
+
+   * Smart Indent block
+     - Command: cmbSmartIndent
+     - Key: ^Tab
+     - Alternate:
+
+   * Smart Unindent block
+     - Command: cmbSmartUnIndent
+     - Key: Shift+^Tab
+     - Alternate:
+
+`cmbUnIndentBlkOne' unindents deleting one char at the start of the line so
+if the line is indented with tabs the line will retract one tab.
+
+`cmbIndentBlk' acts according to the mode. If you are using tabs, the editor
+will put one tab beginning each line. If you aren't using tabs the editor
+will operate the Tab command on the first line and then will use this amount
+of indentation on the entire block.  (Section 4.3).
+
+`cmbUnIndentBlk' acts according to the mode too.  (Section 4.3) mode. This is
+just like `cmbUnIndentBlkOne' deleting one tab but if you don't use tabs the
+editor uses Backspace on the first used column of the first line of the block
+and unindents by the resulting amount all the block.
+
+`cmbSmartIndent' and `cmbSmartUnIndent' indents taking as reference the { }
+pair where the block is, for example:
+       {
+     line1
+          line2
+        line3
+       }
+
+After indenting a block that contains line1 to line3 is:
+       {
+        line1
+        line2
+        line3
+       }
+
+The indentation is made with spaces.
+
+2.4.4 Rectangular Blocks
+------------------------
+
+  The editor includes a mode where you can select a rectangular portion of the
+text and copy, cut, clear, paste, move, etc. this region.  This tool is very
+useful for modifications on columns.
+
+  Attention! The selected area is based on the X,Y coordinates. For this reason
+if you insert lines before the bottom of the rectangle the area won't be
+moved. I don't plan to move the area by now because that takes some CPU and I
+think that this selection is made just before using it. So don't report that
+like a bug. That is the way it works!
+
+   * Set beginning of block
+     - Command: cmbSelRectStart
+     - Key: ^K-Shift+B
+
+   * Set end of block
+     - Command: cmbSelRectEnd
+     - Key: ^K-Shift+K
+
+   * Hide/Show block
+     - Command: cmbSelRectHide
+     - Key: ^K-Shift+H
+
+   * Delete block and copy it to an special Clipboard
+     - Command: cmbSelRectCut
+     - Key: ^K-ShiftT
+
+   * Move block
+     - Command: cmbSelRectMove
+     - Key: ^K+Shift+V
+
+   * Copy to special Clipboard
+     - Command: cmbSelRectCopy
+     - Key: ^K-Shift+C
+
+   * Delete block
+     - Command: cmbSelRectDel
+     - Key: ^K-Shift+L
+
+   * Paste from special Clipboard
+     - Command: cmbSelRectPaste
+     - Key: ^K-Shift+P
+
+2.5 Pseudo Macros
+=================
+
+  This feature is very useful to save some keystrokes. With this feature you
+can create a lot of shortcuts to make your life easiest.
+
+2.5.1 Please enlighten me - what is that?
+-----------------------------------------
+
+  So now, What's a Pseudo Macro? It's like a macro but is triggered by two
+things: one the text behind the cursor, and two the `^Space' combination.
+
+  And what's the result? The result is customizable, but by default there are
+some predefined behaviours. For example, type in a new window the following
+two characters: `#i' and the press `^Space' ...
+
+  Surprised? I bet! You got: #include <.h> and the cursor just in the right
+place to write the name of the header.
+
+Now write the famous stdio word, press `<End>', then `<Enter>' twice and now
+write the following two letters: `ma' and then `^Space' ...
+
+  I bet this time you predicted better what will happen so you aren't so
+surprised ;-). Anyways, Surprise! Now type `pr' and the magic keys and ...
+`printf("");' appears. To end the happy history now type "Hello world!" That's
+all. You wrote the hello world program at a very good speed.
+
+  Now you know what I mean when I say pseudo-macros.
+
+2.5.2 How can I customize that?
+-------------------------------
+
+  Is very easy. There is a file called `pmacros.txt' in the same directory
+where you started the editor. This file contains the definitions for each
+pseudo macro. You can define up to 32 pseudo macros. (Please tell me if that
+isn't enough. I can sacrifice some time to make it dynamically expandable).
+
+  Important: If you are using RHIDE consult the RHIDE documentation to know
+where is stored the `pmacros.txt' file.
+
+  The `pmacros.txt' file is a very good example and is self-explained but I'll
+include here one example.
+
+Trigger: "i("
+Mode: 0,1,0,1,0
+ "if (@0)\n"
+ "  {@1\n"
+   "}\n"
+ "\belse\n"
+ "  {@2\n"
+   "}"
+
+  The Trigger keyword defines the two letter behind the cursor that will
+trigger the pseudo macro.
+
+  The Mode keyword indicates the mode that the editor will use when inserting
+the text. The modes are:
+
+   * Overwrite                (Section 4.1)
+
+   * Autoindent               (Section 4.2)
+
+   * Use Tabs                 (Section 4.3)
+
+   * Persistent blocks        (Section 2.4.1)
+
+   * Intelligent C indent     (Section 4.5)
+
+  Each mode can be 0 or 1. The editor will return to the original mode after
+expanding the pseudo macro. In this case the macro is expanded in the No
+overwrite, autoindent, don't use tabs, the blocks are persistent and don't be
+smart when indenting.
+
+  The rest is the code to insert surrounded by ". You can use \b to indicate
+backspace, \n for newline and \\ to indicate a simple \. If you want to
+insert a @ you have to type it twice @@, because this character has a special
+meaning (see below).
+
+  After the insertion the cursor is positioned in the place marked with @0.
+Don't forget to signal this point or the cursor will positioned at the
+beginning of the file. The places marked with @1, @2 and @3 are saved in the
+markers 7, 8 and 9.
+
+2.6 Miscellaneous
+=================
+
+   * Autoindent mode on/off
+     - Command: cmbIndentMode
+     - Key: ^O
+
+   * Find place marker
+     - Command: cmbGotoMarkn
+     - Key: ^Q n*
+
+   * Set marker
+     - Command: cmbPutMarkn
+     - Key: ^K n*
+
+   * Search the open curly bracket where the cursor is
+     - Command: cmbSearchStart
+     - Key: ^[
+
+   * Search the close curly bracket where the cursor is
+     - Command: cmbSearchEnd
+     - Key: ^]
+
+   * Search the ( where the cursor is
+     - Command: cmbSearchOpPar
+     - Key: Shift+^9
+
+   * Search the ) where the cursor is
+     - Command: cmbSearchClPar
+     - Key: Shift+^0
+
+   * Search the [ where the cursor is
+     - Command: cmbSearchOpCor
+     - Key: Shift+^[
+
+   * Search the ] where the cursor is
+     - Command: cmbSearchClCor
+     - Key: Shift+^]
+
+   * Undo
+     - Command: cmbUndo
+     - Key: Alt+Backspace
+
+   * PMacro's Trigger
+     - Command: cmbExpandCode
+     - Key: ^Space
+
+   * Goto Line
+     - Command: cmbGotoEditorLine
+     - Key: ^J
+
+   * Set the options of the current window (Not in RHIDE)
+     - Command: cmbSetLocalOptions
+     - Key: Alt+L
+
+   * Set the default options (Not in RHIDE)
+     - Command: cmbSetGlobalOptions
+     - Key: Alt+G
+
+   * Convert all tabs in spaces
+     - Command: cmbExpandAllTabs
+     - Key: From menu
+
+   * Compact the text using tabs
+     - Command: cmbCompactBuffer
+     - Key: From menu
+
+   * Start recording a macro
+     - Command: cmbRecordMacro
+     - Key: Shift+F10
+
+   * Stop recording a macro
+     - Command: cmbStopMacro
+     - Key: Alt+F10
+
+   * Play a macro
+     - Command: cmbPlayMacro
+     - Key: ^F10
+
+3 Keyboard
+**********
+
+  The editor uses the scancodes of the keys to trigger the different commands.
+You can reconfigure which key triggers some command. In addition some non-US
+keyboards can mess the commands so you could need to configure the editor for
+your keyboard.
+
+3.1 How to configure the keyboard
+=================================
+
+  There are three associated files with the keyboard: `keybind.cc', `keybind.h'
+and `keybind.txt'.
+
+  The `keybind.h' file contains the scancode number for each key and the number
+for each command. This file is included in `keybind.cc'. If your keyboard has
+a different assignment you can modify the scancodes in this file. For
+example, the German keyboards have the following sequence QWERTZ instead of
+the more common QWERTY, so each time you press `^Z' you won't get the
+function of `^Z', but of `^Y' instead. Some can live with it, but it is
+fixable.  To fix this problem you must correct the scancode of the Z key in
+`keybind.h.' But of course this affects `^Y' too. That's only an example. The
+most common problem is with the symbols like {, }, [, etc.  If you don't know
+how to find the scancode of a key take this link.   (Section 3.2).
+
+  The `keybind.cc' file is a C++ file but you don't need to compile it and link
+with the editor, you only need to preprocess it (I used this method to save
+the time needed to make a parser ;-).
+
+  To convert this file into a `keybind.txt' file use:
+
+     cpp keybind.cc > keybind.txt
+
+Where cpp is the C++ preprocessor. Any of the comment systems available in C++
+may be used, as cpp does not pass comments to the file, `keybind.txt'.  I
+guess that you have cpp, but if not you can use another C++ preprocessor or
+even Clipper using the /P switch.
+
+  There are seven sections in the file, each section is the keyboard translation
+under certain situation.
+The sections are:
+
+   * `NORMAL'
+     - Contains: The single key press.
+
+   * `SHIFT'
+     - Contains: Shift plus a key.
+
+   * `CONTROL'
+     - Contains: Control plus a key.
+
+   * `SHIFT_CONTROL'
+     - Contains: Shift plus control plus a key (all at the same time).
+
+   * `QUICK'
+     - Contains: A key after `^Q' or whatever you defined as `cmbCtrlQ'.
+
+   * `BLOCK'
+     - Contains: A key after `^K' or whatever you defined as `cmbCtrlK'.
+
+   * `BLOCK_SHIFT'
+     - Contains: A key plus shift after `^K' or whatever you defined as
+     `cmbCtrlK'.
+
+   In each section you must put the keyboards and the command associated to it.
+   Use the following syntax:
+     Scan_Code = Command
+
+Not all the scan codes are available. For example, you can't put:
+     RSHIFT = xxxxx
+
+   Look at `keybind.h' to see the scan codes labels and the available commands.
+
+Important Notes:
+I)
+  The new assignments are mixed with the original assignments, so if you want
+to eliminate an old key combination you *must* assign a `cmbNoCommand' to
+this key. For example, if you wish eliminate the BACKSPACE key and use the
+`^O' instead, you must:
+  1. put `BACKSPACE = cmbNoCommand' in the NORMAL section,
+
+  2. put `O = cmbBackSpace' in the CONTROL section.
+
+If you only do part two, you'll not eliminate the BACKSPACE key.
+
+II)
+  If some thing is wrong in the `keybind.txt' file the program will inform the
+error. The line number is for the `keybind.txt' and not for `keybind.cc'
+(Sorry, some day I'll fix this).
+To continue the execution press any key and then enter.
+
+III)
+  You can repeat an assignment, the last wins:
+
+     BACKSPACE = cmbNoCommand
+     BACKSPACE = cmbBackSpace
+
+  The first is ignored.
+
+3.2 A program to find the scancodes
+===================================
+
+  The author of the following program is Robert Hîhne:
+
+#include <stdio.h>
+#include <dos.h>
+
+#ifdef __GNUC__
+#include <dpmi.h>
+#define REGS __dpmi_regs
+#define INTR(nr,r) __dpmi_int(nr,&r)
+#else
+#define REGS union REGS
+#define INTR(nr,r) int86(nr,&r,&r)
+#endif
+
+unsigned short getshiftstate(void)
+{
+  REGS r;
+  r.h.ah = 0x12;
+  INTR(0x16,r);
+  return r.x.ax;
+}
+
+unsigned short gkey(void)
+{
+  REGS r;
+  r.h.ah = 0x10;
+  INTR(0x16,r);
+  if (r.h.al == 0xE0 || r.h.al == 0) r.h.al = 0;
+  return r.x.ax;
+}
+
+main()
+{
+  unsigned short key;
+  do
+  {
+    key = gkey();
+    fprintf(stdout,"%04X, scan code: %d\n",key,key>>8);
+  } while (1);
+}
+
+4 Editing Modes
+***************
+
+  The editor has nine settings that control the function and aspect of the
+editor. Not all can be controlled by RHIDE Beta 6 release 22/10, and I don't
+know if all the settings will be supported in the 1.0 release so if you don't
+find some setting in RHIDE and you feel that setting is really needed contact
+me.
+
+  The settings are:
+
+4.1 Overwrite
+=============
+
+  This setting controls if the typed characters are inserted in the buffer or
+if the typed characters replace the original ones.  (Section 2.3) for a
+detailed explanation.
+
+4.2 Autoindent
+==============
+
+  This setting controls what happend when you press <ENTER>. If this setting is
+off the cursor goes to the column 1 of a new line. If the mode is on the
+editor will try to keep the indentation of the code inserting spaces.
+
+4.3 Real Tabs
+=============
+
+  This setting controls what happend when you press `<TAB>'. If this setting is
+on the editor will insert an ASCII 9 in this place.
+
+  An ASCII 9 is a TAB, that means that the width of this char is enough to move
+the cursor to the next tabulator column. In the editor the tabulator columns
+are equidistant and the positions are controled by the Tab Size value.
+
+  If this setting is off the editor won't put any ASCII 9 in your text.
+Instead the editor will insert enough spaces to move the cursor to the next
+tab-stop, but if the cursor is positioned on the first character of the line
+the editor will insert spaces to move this position to the next hole in the
+line over the line where you are. Confused? Sorry for my English, an example
+will clarify that:
+
+This is a line over the line where you are
+
+That's the line where the cursor is, at column one.
+
+  After pressing TAB you'll get:
+
+This is a line over the line where you are
+
+     That's the line where the cursor is, at column one.
+
+  Now can ask, Why this? Is that useful? The answer is that's very useful to
+keep your code indented, experiment using that under a line with if, for, etc.
+
+  Another thing controlled by this setting is the behaviour of the <Backspace>
+key, when the setting is on the key is just 'delete the character at the left
+of the cursor' but when the setting is off this key is the 'Unindent' key.
+
+  The editor is much more coherent when you choose to use TABs or not use TABs.
+If you mix the two modes you'll get some unexpected things, specially in the
+indentation of the blocks.
+
+  Is better if you always work in a file without tabs and with this setting
+off. Then you'll get much from the editor.
+
+  Now you can say: `But I really need tabs because I'm editing a make file!' or
+`because I'll send the file using an ultra slow link and I want the
+compression granted by the tabs.' In these cases you can first expand all
+tabs, then work without real tabs and at the finish of your work compact all
+possible spaces and generate a file with all the tabs that you need.
+(Section 2.6) section.
+
+4.4 Persistent Blocks
+=====================
+
+  This setting controls the behaviour of the selected area.
+
+   (Section 2.4.1) chapter for a detailed explanation.
+
+4.5 Intelligent C indent
+========================
+
+  This mode was designed to be used in jointly with the Pseudo Macros (
+(Section 2.5)) and the Real Tabs mode in off to achieve an easy way to indent
+the code making a better work than the Autoindent mode.
+
+  In this mode the spaces inserted after pressing <ENTER> depend on the first
+word in the last line. For example, if you have:
+
+     if (a==b)_
+
+  With the cursor in the '_' position and press <ENTER> you'll get:
+
+     if (a==b)
+       _
+
+  Now you can do either of two things, 1) press space and write the code that
+will be executed by the if, or 2) if this a multiline code press { and
+<ENTER>.  In the last case you'll get:
+
+     if (a==b)
+       {
+        _
+
+  Now type your first line of code. Press <ENTER>. Write your next line.  Press
+<ENTER> again and then <Backspace>:
+
+     if (a==b)
+       {
+        1st line;
+        2nd line;
+       _
+
+  Now type } and press <ENTER> one more time:
+
+     if (a==b)
+       {
+        1st line;
+        2nd line;
+       }
+     _
+
+  As you can see the code is perfectly aligned without a significant work on
+your part.
+
+  I tried to make this mode as smart as possible, but needs more work. If you
+have suggestions contact me.
+
+  Another important thing is that this indentation has a personal style, my
+style ;-), so maybe you don't like it. If that's your case you can do the
+following things:
+
+   * Use another way of indentation offered by the editor. For example, turn
+     on the Real Tabs mode and indent with tabs.
+
+   * Customize the `pmacros.txt' file ( (Section 2.5)), actually this file is
+     coherent with this mode.
+
+   * The editor isn't configurable like Emacs or Brief using a language, but
+     is written in C++ and chances that you know C++ are over the 90% so
+     contact me and I'll help you to write the routines that you need to get
+     an indentation in your own style :-).
+
+4.5.1 Can you explain to me more about the behavior of this mode?
+-----------------------------------------------------------------
+
+  I'll try to describe the behaviour of the mode:
+
+  Each time you press <ENTER> the editor inserts a `\r\n' string in your text,
+after that the editor searchs one line located above the new line that has at
+least one character inside. This line is taken as reference. The editor
+analyzes this line searching for:
+
+   * The first non-blank character on this line.
+
+   * The first word on this line.
+
+   * The first parenthesis.
+
+   * The balance of parentheses on the line.
+
+   * The last non-blank and non-comment character in the line.
+
+  Now, if the line contains { at the start the editor goes to the first column
+after the {.
+
+  If the line contains } at the start the editor will go to the same column of
+the } and then will perform a <Backspace>. If the Real Tabs mode is off,
+that's an unindent.  (Section 4.3).
+
+  If the line starts with a C++ comment the effect is the same as in
+Autoindent.  (Section 4.2).
+
+  If the line starts with a C comment the editor will try to skip the comment
+and analyze the rest of the line, but if the comment doesn't end on this line
+the editor will go to the column where the `/' is.
+
+  If the line starts with `/' the editor goes to this column.
+
+  If the line has more `(' than `)' the editor will go to the column of the
+first non-blank after the first `('.
+
+  If the line has more `)' than `(' the editor will search the line where the
+number of parentheses is balanced, then will analyze this line. If the whole
+line still generates an unbalanced situation the editor will go to the first
+used column in the line that was found the first time. But if this line lets
+all balanced the editor will take the first word on the line and will use it
+as reference.
+
+  At last, and according to the word found, the editor will use this word as
+reference. The editor recognises the following keywords:
+
+   * `do'
+     - Action: +2 but not if ... ;
+
+   * `if'
+     - Action: +2 but not if ... ;
+
+   * `for'
+     - Action: +3 but not if ... ;
+
+   * `else'
+     - Action: +2
+
+   * `case'
+     - Action: +5
+
+   * `while'
+     - Action: +2 but not if ... ;
+
+   * `switch'
+     - Action: +2
+
+   * `break'
+     - Action: unindent
+
+   * `return'
+     - Action: unindent
+
+   * `default'
+     - Action: +5
+
+  The numbers are how many spaces are added with reference to the first letter
+of the word.  'not if ... ;' specified means that, if the line ends with a
+semicolon, the editor will do the same as for Autoindent.  (Section 4.2). The
+unindent is performed with <Backspace>.
+
+  Seasick?  (Section 4.5.2).
+
+  Note: Some of these features were added in v0.2.14 of the editor based on a
+suggestion of <Bradford L. Spencer, stud73@nortel.ca> about the behaviour of
+the mode on a line like this `printf("Num: %d",' with the rest of the
+parameters on the next line.
+
+4.5.2 Do you have more examples?
+--------------------------------
+
+  Well here are some examples. I used a strange convention, like this: if I say
+type `a[ENTER]{', type the letter `a', then press `<ENTER>' and finally press
+the `{' key.
+
+Example 1: (Is similar to one explained before but is to show the convention)
+
+     Type:
+     if (a==1)[ENTER]{[ENTER]a=2;[ENTER]b=3;[ENTER][BACKSPACE]}[ENTER]
+     
+     You'll get:
+     
+     if (a==1)
+       {
+        a=2;
+        b=3;
+       }
+     [<--- cursor here]
+
+Example 2: A switch/case example
+
+     Type:
+     switch(a)[ENTER]{[ENTER]case 1:[ENTER]a=2;[ENTER]b=3;[ENTER]break;
+     [ENTER]case 2:[ENTER]b=5;[ENTER]break;[ENTER][BACKSPACE]}[ENTER]
+     
+     You'll get:
+     
+     switch(a)
+       {
+        case 1:
+             a=2;
+             b=3;
+             break;
+        case 2:
+             b=5;
+             break;
+       }
+     [<--- cursor here]
+
+Example 3: A call to a function that takes a lot of parameters
+
+     Type:
+     printf([SPACE]"Num: %d",[ENTER]a[SPACE]);[ENTER]
+     
+     You'll get:
+     
+     printf( "Num: %d",
+             a );
+     [<--- cursor here]
+
+Example 4: A lot of parentheses
+
+     Type:
+     if[SPACE]([SPACE](a==1)[SPACE]||[ENTER](b==2)[SPACE]||[ENTER]
+     c[SPACE])[ENTER]
+     
+     You'll get:
+     
+     if ( (a==1) ||
+          (b==2) ||
+          c )
+       [<--- cursor here]
+
+Example 5: Comment trying to interfere part 1
+
+     Type:
+     /*-a-*/for[SPACE](x=1;x;--x)[ENTER]
+     
+     You'll get:
+     
+     /*-a-*/for (x=1;x;--x)
+               [<--- cursor here]
+
+Example 6: Comment trying to interfere part 2
+
+     Type:
+     for[SPACE](x=1;x;--x);[SPACE]//-b[ENTER]
+     
+     You'll get:
+     
+     for (x=1;x;--x); //-b
+     [<--- cursor here]
+
+ Note: Of course you can fool the editor but as you can see it is relatively
+smart ;-).
+
+4.6 Column cursor
+=================
+
+  This setting enables an strange feature of the editor, when this mode is on
+the column where the cursor is is highlighted. This feature is very good to
+check if some part of your code is aligned.
+
+  If you like this mode but is very uncomfortable to use all the time contact
+me and if I get enough feedback I'll put this thing in a key to be turned
+on/off quickly.
+
+4.7 Row cursor
+==============
+
+  This setting is similar to the column cursor but acts on the row where the
+cursor is. If you enable the two modes you'll get a cross on the screen
+showing where the cursor is.
+
+4.8 Match pair highlight
+========================
+
+  This mode acts showing the pairs of (/), [/] and {/} on the fly. Each time
+you type one of these symbols the editor will search the matching pair, if
+the editor finds it and the match is on the screen both will be highlighted,
+if the match is outside the screen the editor will inform the position on the
+status line, and if there is no match the editor will inform the situation in
+the status line too.
+
+  That's very useful when you are typing complex parenthetical expressions or a
+very nested code. You can use it jointly with the `cmbSearchStart',
+`cmbSearchEnd', `cmbSearchOpPar', `cmbSearchClPar', `cmbSearchOpCor' and
+`cmbSearchClCor' commands. ( (Section 2.6)).
+
+4.9 Syntax Highlight
+====================
+
+  The editor can highlight the syntax of your code. The available modes are:
+
+   * No highlight, all the code is with the same color.
+
+   * C/C++ Highlight.
+
+   * Pascal Highlight.
+
+   * Clipper Highlight.
+
+  The kind of highlight is chosen automatically in RHIDE using the extention of
+the file.
+
+  The C/C++ highlight was designed for the GNU C compiler.
+
+  The Pascal highlight was designed for the GNU Pascal compiler.
+
+  The Clipper highlight was designed for the CA-Clipper 5 compiler.
+
+5 Calculator
+************
+
+  The calculator inside the editor was made by Laszlo Molnar. Laszlo is a
+friend of mine from Hungary and is the author of the great DJP progam (a
+djgpp exe's compressor).
+
+  The sources of the calculator are in the `parser.c' file. They are free and
+you can use it for any purpose.
+
+  Here is the documentation of the calculator written by Laszlo:
+
+  The purpose of this program, to provide a simple but powerful 'calculator'
+for programmers, to help with coding and debugging, where GDB's expression
+evaluator is not enough.
+
+  You may say "Hey, I can write a better one with flex and bison", and you may
+be right. I can make a better one too. But it'll be 4-5 times longer!  This
+calculator is only 10 kbytes of C code. What I think? It's not that bad.
+
+  The parser algorithm I use is called 'Operator Precedence Parsing' (I
+translated this from Hungarian, so I may be wrong ;-). It works with
+'operator precedence grammars' (a subset of LR(1) grammars), which means that
+there can't be two non-terminating tokens next to each other on the right
+side of your grammar rules. It's ideal for expression evaluation.
+
+  With this parser you can use numbers, operators, parentheses and functions
+like in C.
+
+Here are the operators in decreasing precedence:
+
+  1. `~' unary not `-' unary minus
+
+  2. `**' power
+
+  3. `*' multiplication `/' division `%' modulo
+
+  4. `+' plus `-' binary minus
+
+  5. `<<' shift left `>>' shift right
+
+  6. `&' logical and
+
+  7. `^' logical xor
+
+  8. `|' logical or
+
+  The calculator includes the following functions: sin\, cos\, tan\, sinh\,
+cosh\, tanh\, asin\, acos\, atan\, log\, log10\, exp\, abs\, sqrt\, ceil and
+floor.  They work as you expected.  Additionally the calculator provides some
+radix conversion routines: bin\, oct\, dec and hex.
+
+  The calculator uses doubles, but you can use numbers in the usual integer
+formats also: 0x... for base 16, 0b... for base 2 and 0... for base 8.  The
+result of the calculation is displayed as a double for base 10, and converted
+to long long format for the other radixes.
+
+Error codes:
+
+   * -1
+     - Meaning: yylex()   failed e.g.  `1+#'
+
+   * -3
+     - Meaning: yyparse() failed e.g.  `1+2)'
+
+   * -4
+     - Meaning: floating point exception e.g. `sqrt(-1)'
+
+6 How to contact me
+*******************
+
+  If you have any suggestions or bug report contact me at the address shown in
+the author section.  (Section 1.3).
+
+6.1 Bugs
+========
+
+  If you find a bug please contact me, the Undo thing is the most complex one
+and I know that needs some work on it.
+
+  When reporting a bug please don't tell me: Some times some strange thing
+happend ... Try to find a pattern to the problem. What situation triggers the
+problem? ... with which file(s)? Then send me the file and the description.
+
+  When sending to me a file UUEncode it to avoid problems related with the
+e-mail.
+
+7 Index
+*******
+
+* Autoindent:                            Section 4.2
+* Blocks:                                Section 2.4
+* Blocks - Rectangular:                  Section 2.4.4
+* Bugs:                                  Section 6.1
+* Column cursor:                         Section 4.6
+* How to contact me:                     Chapter 6
+* Indentation:                           Section 2.4.3
+* Insert and Delete:                     Section 2.3
+* Intelligent C indent:                  Section 4.5
+* keybind.cc:                            Section 3.1
+* keybind.h:                             Section 3.1
+* keybind.txt:                           Section 3.1
+* Match pair highlight:                  Section 4.8
+* Movement:                              Section 2.2
+* Overwrite:                             Section 4.1
+* Persistent Blocks:                     Section 2.4.1
+* pmacros.txt:                           Section 2.5
+* Pseudo Macros:                         Section 2.5
+* Real Tabs:                             Section 4.3
+* Row cursor:                            Section 4.7
+* scan codes:                            Section 3.2
+* TABs:                                  Section 4.3
+* Use Real Tabs:                         Section 4.3
+
+8 Index of key commands
+***********************
+
+* Autoindent mode on/off <^O>:           Section 2.6
+* Beginning of line <Home>:              Section 2.2
+* Bottom of file <^Q-C>:                 Section 2.2
+* Bottom of window <^Q-X>:               Section 2.2
+* Character left <Left arrow>:           Section 2.2
+* Character right <Right arrow>:         Section 2.2
+* cmbBackSpace <Backspace>:              Section 2.3
+* cmbCharLeft <Left arrow>:              Section 2.2
+* cmbCharRight <Right arrow>:            Section 2.2
+* cmbClear <^Del>:                       Section 2.4
+* cmbCompactBuffer <From menu>:          Section 2.6
+* cmbCopy <^Ins>:                        Section 2.4
+* cmbCopyBlock <^K-C>:                   Section 2.4
+* cmbCut <^K-Y>:                         Section 2.4
+* cmbDelChar <Del>:                      Section 2.3
+* cmbDelEnd <^Q-Y>:                      Section 2.3
+* cmbDelLine <^Y>:                       Section 2.3
+* cmbDelPrevWord <^Backspace>:           Section 2.3
+* cmbDelStart <^Q-H>:                    Section 2.3
+* cmbDelWord <^T>:                       Section 2.3
+* cmbEndSelect <^K-K>:                   Section 2.4
+* cmbExpandAllTabs <From menu>:          Section 2.6
+* cmbExpandCode <^Space>:                Section 2.6
+* cmbFirstLineInScreen <^Q-E>:           Section 2.2
+* cmbGoBeginBlock <^Q-B>:                Section 2.4
+* cmbGoEndBlock <^Q-K>:                  Section 2.4
+* cmbGotoEditorLine <^J>:                Section 2.6
+* cmbGotoMarkn <^Q n*>:                  Section 2.6
+* cmbHideSelect <^K-H>:                  Section 2.4
+* cmbIndentBlk <^K-Tab>:                 Section 2.4.3
+* cmbIndentBlkOne <^K-I>:                Section 2.4.3
+* cmbIndentMode <^O>:                    Section 2.6
+* cmbInsMode <Ins>:                      Section 2.3
+* cmbLastLineInScreen <^Q-X>:            Section 2.2
+* cmbLineDown <Down arrow>:              Section 2.2
+* cmbLineEnd <End>:                      Section 2.2
+* cmbLineStart <Home>:                   Section 2.2
+* cmbLineUp <Up arrow>:                  Section 2.2
+* cmbMarkLine <^K-L>:                    Section 2.4
+* cmbMarkWord <^K-T>:                    Section 2.4
+* cmbMoveBlock <^K+V>:                   Section 2.4
+* cmbNewLine <Enter>:                    Section 2.3
+* cmbPageDown <PgDn>:                    Section 2.2
+* cmbPageUp <PgUp>:                      Section 2.2
+* cmbPaste <Shift+Ins>:                  Section 2.4
+* cmbPlayMacro <^F10>:                   Section 2.6
+* cmbPutMarkn <^K n*>:                   Section 2.6
+* cmbReadBlock <^K-R>:                   Section 2.4
+* cmbRecordMacro <Shift+F10>:            Section 2.6
+* cmbReplaceSelect <Shift+^Ins>:         Section 2.4
+* cmbScrollDown <^Z>:                    Section 2.2
+* cmbScrollUp <^W>:                      Section 2.2
+* cmbSearchClCor <Shift+^]>:             Section 2.6
+* cmbSearchClPar <Shift+^0>:             Section 2.6
+* cmbSearchEnd <^]>:                     Section 2.6
+* cmbSearchOpCor <Shift+^[>:             Section 2.6
+* cmbSearchOpPar <Shift+^9>:             Section 2.6
+* cmbSearchStart <^[>:                   Section 2.6
+* cmbSelLength <^Q-L>:                   Section 2.4
+* cmbSelRectCopy <^K-Shift+C>:           Section 2.4.4
+* cmbSelRectCut <^K-ShiftT>:             Section 2.4.4
+* cmbSelRectDel <^K-Shift+L>:            Section 2.4.4
+* cmbSelRectEnd <^K-Shift+K>:            Section 2.4.4
+* cmbSelRectHide <^K-Shift+H>:           Section 2.4.4
+* cmbSelRectMove <^K+Shift+V>:           Section 2.4.4
+* cmbSelRectPaste <^K-Shift+P>:          Section 2.4.4
+* cmbSelRectStart <^K-Shift+B>:          Section 2.4.4
+* cmbSetGlobalOptions <Alt+G>:           Section 2.6
+* cmbSetLocalOptions <Alt+L>:            Section 2.6
+* cmbSmartIndent <^Tab>:                 Section 2.4.3
+* cmbSmartUnIndent <Shift+^Tab>:         Section 2.4.3
+* cmbStartSelect <^K-B>:                 Section 2.4
+* cmbStopMacro <Alt+F10>:                Section 2.6
+* cmbTextEnd <^Q-C>:                     Section 2.2
+* cmbTextStart <^Q-R>:                   Section 2.2
+* cmbToLower <^K-O>:                     Section 2.4
+* cmbToUpper <^K-M>:                     Section 2.4
+* cmbUndo <Alt+Backspace>:               Section 2.6
+* cmbUnIndentBlk <^K-Shift+Tab>:         Section 2.4.3
+* cmbUnIndentBlkOne <^K-U>:              Section 2.4.3
+* cmbWordLeft <^Left arrow>:             Section 2.2
+* cmbWordRight <^Right arrow>:           Section 2.2
+* cmbWriteBlock <^K-W>:                  Section 2.4
+* Compact the text using tabs <From menu>: Section 2.6
+* Convert all tabs in spaces <From menu>: Section 2.6
+* Convert to Lowercase <^K-O>:           Section 2.4
+* Convert to Uppercase <^K-M>:           Section 2.4
+* Copy the selected block <^K-C>:        Section 2.4
+* Copy to Clipboard <^Ins>:              Section 2.4
+* Copy to special Clipboard <^K-Shift+C>: Section 2.4.4
+* Delete block <^Del>:                   Section 2.4
+* Delete block <^K-Shift+L>:             Section 2.4.4
+* Delete block and copy it to an special Clipboard <^K-ShiftT>: Section 2.4.4
+* Delete block and copy it to the Clipboard <^K-Y>: Section 2.4
+* Delete character to left <Backspace>:  Section 2.3
+* Delete line <^Y>:                      Section 2.3
+* Delete the character under cursor <Del>: Section 2.3
+* Delete to end of line <^Q-Y>:          Section 2.3
+* Delete to start of line <^Q-H>:        Section 2.3
+* Delete word at left <^T>:              Section 2.3
+* Delete word at right <^Backspace>:     Section 2.3
+* End of line <End>:                     Section 2.2
+* Find place marker <^Q n*>:             Section 2.6
+* Goto Line <^J>:                        Section 2.6
+* Hide/Show block <^K-H>:                Section 2.4
+* Hide/Show block <^K-Shift+H>:          Section 2.4.4
+* Indent block <^K-Tab>:                 Section 2.4.3
+* Indent block one position adding a space <^K-I>: Section 2.4.3
+* Insert line <Enter>:                   Section 2.3
+* Insert mode on/off <Ins>:              Section 2.3
+* Line down <Down arrow>:                Section 2.2
+* Line up <Up arrow>:                    Section 2.2
+* Mark line <^K-L>:                      Section 2.4
+* Mark word <^K-T>:                      Section 2.4
+* Move block <^K+Shift+V>:               Section 2.4.4
+* Move block <^K+V>:                     Section 2.4
+* Move to beginning of block <^Q-B>:     Section 2.4
+* Move to end of block <^Q-K>:           Section 2.4
+* Page down <PgDn>:                      Section 2.2
+* Page up <PgUp>:                        Section 2.2
+* Paste from Clipboard <Shift+Ins>:      Section 2.4
+* Paste from special Clipboard <^K-Shift+P>: Section 2.4.4
+* Play a macro <^F10>:                   Section 2.6
+* PMacro's Trigger <^Space>:             Section 2.6
+* Read block from disk <^K-R>:           Section 2.4
+* Replace the block by the Clipboard block <Shift+^Ins>: Section 2.4
+* Report the length of the block <^Q-L>: Section 2.4
+* Scroll the screen one line down <^Z>:  Section 2.2
+* Scroll the screen one line up <^W>:    Section 2.2
+* Search the ( where the cursor is <Shift+^9>: Section 2.6
+* Search the ) where the cursor is <Shift+^0>: Section 2.6
+* Search the [ where the cursor is <Shift+^[>: Section 2.6
+* Search the ] where the cursor is <Shift+^]>: Section 2.6
+* Search the close curly bracket where the cursor is <^]>: Section 2.6
+* Search the open curly bracket where the cursor is <^[>: Section 2.6
+* Set beginning of block <^K-B>:         Section 2.4
+* Set beginning of block <^K-Shift+B>:   Section 2.4.4
+* Set end of block <^K-K>:               Section 2.4
+* Set end of block <^K-Shift+K>:         Section 2.4.4
+* Set marker <^K n*>:                    Section 2.6
+* Set the default options (Not in RHIDE) <Alt+G>: Section 2.6
+* Set the options of the current window (Not in RHIDE) <Alt+L>: Section 2.6
+* Smart Indent block <^Tab>:             Section 2.4.3
+* Smart Unindent block <Shift+^Tab>:     Section 2.4.3
+* Start recording a macro <Shift+F10>:   Section 2.6
+* Stop recording a macro <Alt+F10>:      Section 2.6
+* Top of file <^Q-R>:                    Section 2.2
+* Top of window <^Q-E>:                  Section 2.2
+* Undo <Alt+Backspace>:                  Section 2.6
+* Unindent block <^K-Shift+Tab>:         Section 2.4.3
+* Unindent block one character - not an x position <^K-U>: Section 2.4.3
+* Word left <^Left arrow>:               Section 2.2
+* Word right <^Right arrow>:             Section 2.2
+* Write block to disk <^K-W>:            Section 2.4
+

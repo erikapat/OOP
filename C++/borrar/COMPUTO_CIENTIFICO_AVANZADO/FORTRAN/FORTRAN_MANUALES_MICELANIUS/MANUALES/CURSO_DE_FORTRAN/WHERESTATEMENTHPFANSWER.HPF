@@ -1,0 +1,40 @@
+    PROGRAM Prime_Numbers
+     IMPLICIT NONE
+     INTEGER, ALLOCATABLE, DIMENSION(:) :: Prime
+!HPF$ PROCESSORS, DIMENSION(4)   :: P
+!HPF$ DISTRIBUTE(CYCLIC) ONTO P :: Prime
+     INTEGER :: N_elts, i
+
+      PRINT*, "Type in the size of the array"
+      READ*, N_elts
+
+      ALLOCATE(Prime(N_elts),STAT=i)
+
+      IF (i .NE. 0) THEN
+       PRINT*, "Allocation request failed"
+      ELSE
+
+       Prime = (/ (i, i = 1,N_elts) /)
+       i = 2
+
+       outa: DO
+        WHERE (MOD(Prime(i+1:),i) .EQ. 0) Prime(i+1:) = 0
+        DO
+         i = i + 1
+         IF (i .EQ. N_elts) EXIT outa
+         IF (Prime(i) .NE. 0) EXIT
+        END DO
+       END DO outa
+
+       PRINT*, PACK(Prime,Prime/=0)
+
+      !DO i = 1, N_elts
+      ! IF (Prime(i) .NE. 0) PRINT*, Prime(i)
+      !END DO
+
+       DEALLOCATE(Prime)
+
+      END IF
+
+    END PROGRAM Prime_Numbers
+

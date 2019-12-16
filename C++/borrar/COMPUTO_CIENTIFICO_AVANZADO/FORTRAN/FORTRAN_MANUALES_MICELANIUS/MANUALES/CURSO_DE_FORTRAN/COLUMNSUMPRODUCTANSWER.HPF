@@ -1,0 +1,28 @@
+    PROGRAM Main
+    IMPLICIT NONE
+     INTEGER :: i, j, n, ierr
+     REAL, DIMENSION(:,:), ALLOCATABLE :: A
+     REAL, DIMENSION(:), ALLOCATABLE :: S
+!HPF$ PROCESSORS P(4)
+!HPF$ DISTRIBUTE A(*,CYCLIC) ONTO P
+!HPF$ DISTRIBUTE S(CYCLIC) ONTO P
+      PRINT*, "Type in array size"
+      READ*, n
+      ALLOCATE(A(n,n),STAT=ierr)
+      IF (ierr .EQ. 0) THEN
+       ALLOCATE(S(n),STAT=ierr)
+       IF (ierr .EQ. 0) THEN
+        S = 0
+        CALL RANDOM_NUMBER(A)
+        DO j=1,n
+         DO i=1,n
+          S(j) = S(j) + A(i,j)
+         END DO
+        END DO
+       PRINT*, S
+       DEALLOCATE(S)
+      END IF
+      DEALLOCATE(A)
+     END IF
+    END PROGRAM
+

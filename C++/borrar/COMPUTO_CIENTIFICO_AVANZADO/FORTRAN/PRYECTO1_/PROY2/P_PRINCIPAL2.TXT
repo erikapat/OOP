@@ -1,0 +1,45 @@
+program P_principal
+
+use operaciones
+implicit none
+
+type(lista), pointer:: lista1, lista2, lista3
+type(cabecera)::list1, list2, list3
+character(len=25):: arch_data !nombre del archivo, que no debe superar los 25
+integer::ios, i,n, no_nulos
+type(lista), pointer::primero,actual, anterior
+
+!print "(16x,(a),\)", "INTRODUZCA DIMENSIÓN DE LA MATRIZ CUADRADA: " 
+!read *,n 
+!print "(16x,(a),\)", "Introduzca Número de elemntos No Nulos: " 
+!read *,no_nulos 
+
+print "(16x,(a),\)", "Nombre de Archivo (con su extensi¢n): " 
+read *,arch_data 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ERROR NO SE ABRE EL ARCHIVO !!!!!!!!!!!!!!!!!!!!!!!!!
+if (ios/=0) then
+   print "(/)"
+   print "(16x,(a))", "____________________ERROR____________________"
+   print "(16x,(a))", " NO SE PUEDE ABRIR EL ARCHIVO ESPECIFICADO" 
+   print "(16x,(a))", " (!Verifique que el archivo a leer exista!)"
+   print "(//)"
+   stop
+end if
+
+lista1=>.lectura.arch_data !!!!!LECTURA
+lista2=>.lectura.arch_data !!!!!LECTURA
+
+actual=>lista1
+do while(associated(actual))
+   print*, actual%valor,actual%indice_fila, actual%indice_columna
+   actual=>actual%sig
+end do
+
+!******************************************************************************************
+!contains
+
+function suma_matriz(list1, list2)result(lista3)
+type(cabecera), intent(in)::list1,list2
+type(lista), pointer :: lista3
+
+end program P_principal

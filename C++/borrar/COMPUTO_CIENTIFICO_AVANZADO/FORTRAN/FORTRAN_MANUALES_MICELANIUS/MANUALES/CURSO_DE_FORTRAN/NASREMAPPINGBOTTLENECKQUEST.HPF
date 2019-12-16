@@ -1,0 +1,36 @@
+ MODULE Global_Procesor_Arrays
+  !HPF$ PROCESSORS, DIMENSION(4) :: P1
+  !HPF$ PROCESSORS, DIMENSION(2,2) :: P2
+ END MODULE Global_Procesor_Arrays
+
+ PROGRAM Fizz_Bang
+  USE Global_Procesor_Arrays
+  IMPLICIT NONE
+  REAL, DIMENSION(50,50) :: A
+  !HPF$ DISTRIBUTE (BLOCK,BLOCK) ONTO P2 :: A
+
+   CALL RANDOM_NUMBER(A)
+
+! here
+
+   PRINT*,  Calc_Result(A)
+
+ CONTAINS
+
+  FUNCTION Calc_Result(A)
+   REAL, DIMENSION(:,:), INTENT(IN) :: A
+   REAL, DIMENSION(SIZE(A,1)) :: Calc_Result
+   INTEGER :: i, j
+   !HPF$ DISTRIBUTE (*,CYCLIC) ONTO P1 :: A
+   !HPF$ DISTRIBUTE (CYCLIC) ONTO P1 :: Calc_Result
+
+! and here
+
+    Calc_Result = 0.0
+    DO i = 1, UBOUND(A,1)
+     FORALL (j=1:UBOUND(A,2)) Calc_Result(j) = Calc_Result(j)+A(i,j)*i
+    END DO
+  END FUNCTION Calc_Result
+
+ END PROGRAM Fizz_Bang
+

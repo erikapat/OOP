@@ -1,0 +1,73 @@
+module definicion_LU
+	implicit none
+	integer :: ier, i, k, n, j
+	real ( kind=8 ), parameter :: eps=1.d-06
+	real ( kind=8 ) :: det
+	real ( kind=8 ), dimension ( : ), allocatable :: B, X
+	real ( kind=8 ), dimension ( : , : ), allocatable :: A
+	character (len=20) :: fidat, fires
+end module definicion_LU
+
+program LU
+	use definicion_LU
+	call endat
+	call calculo
+	call salida
+contains
+	subroutine endat
+		print*,'Introduce el nombre del fichero de datos'
+		read(*,"(A)")fidat
+		open (5, file=fidat)
+		print*,'Introduce la dimension del sistema'
+		read(5,*)n
+		allocate ( A(n,n), B(n), X(n) )
+		print*,'Introduce la matriz por columnas'
+		read(5,*)A
+		print*,'Introduce el vector de terminos independientes'
+		read(5,*)B
+		print*,'Introduce el nombre del fichero de resultados'
+		read(5,"(A)")fires
+	end subroutine endat
+
+	subroutine calculo
+		ier=0
+		if(ABS(A(1,1))<eps) then
+			ier=1
+			return
+		end if
+		A(2:n,1)=A(2:n,1)/A(1,1)
+		do i=2,n
+			do j=i,n
+				A(i,j)=A(i,j)-sum(A(i,1:i-1)*A(1:i-1,j))
+			end do
+			if(ABS(A(i,i))<eps) then
+				ier=1
+				return
+			end if
+			A(i+1:n,i)=(/((A(i+1:n,i)-A(i+1:n,k)*A(k,i))/A(i,i),k=1,i-1)/)
+		end do
+		det=1.
+		do i=1,n
+			det=det*A(i,i)
+		end do
+	
+		X(1)=B(1)
+		do i=2,n      
+			X(i)=B(i)-sum(A(i,1:i-1)*X(1:i-1))
+		end do
+	
+		X(n)=X(n)/A(n,n)
+		do i=n-1,1,-1
+			X(i)=(X(i)-sum(A(i,i+1:n)*X(i+1:n)))/A(i,i)
+		end do
+	end subroutine calculo
+
+	subroutine salida
+		open(6,file=fires)
+		write(6,*) 'La solucion es:'
+		write(6,"(E22.16)") X
+		write(6,*) 'El determinante es:'
+		write(6,"(F11.6)") det
+	end subroutine salida 
+end program LU       
+

@@ -1,0 +1,81 @@
+      PROGRAM golf
+
+! Include HPF library
+!
+      USE hpf_library
+
+      IMPLICIT NONE
+
+      INTEGER, PARAMETER :: nhole=18
+
+! Declare arrays
+!
+      INTEGER, DIMENSION(nhole) :: score,par,rtot,rsplit,
+     &                             rtot3,rtot4,rtot5,birdie
+      LOGICAL, DIMENSION(nhole) :: smask,mask
+
+! Distribute arrays
+!
+!HPF$ DISTRIBUTE (BLOCK) :: score
+!HPF$ ALIGN WITH score :: par, rtot, rsplit, smask, mask, rtot3
+!HPF$ ALIGN WITH score :: rtot4, rtot5, birdie
+
+! Set up score and par
+!
+      DATA score/5,3,4,4,4,2,3,5,6,2,5,4,3,4,4,4,7,3/,
+     &       par/4,4,4,4,4,4,3,4,4,4,3,4,3,5,3,4,5,4/
+      INTEGER i
+
+! Initializations
+!
+      rtot3 = 0
+      rtot4 = 0
+      rtot5 = 0
+      birdie = 0
+
+!.... 1) Find running total
+!
+      rtot = SUM_PREFIX(score)
+
+!.... 2) Find running total per 9 holes
+!
+      FORALL (i=1:nhole) smask(i) = i.GT.9
+      rsplit = SUM_PREFIX(score, segment=smask)
+
+!.... 3) Find running total for par 3, 4 and 5 holes
+!
+      mask = (par.EQ.3)
+      WHERE(mask)
+     &  rtot3 = SUM_PREFIX(score, mask=mask)
+      mask = (par.EQ.4)
+      WHERE(mask)
+     &  rtot4 = SUM_PREFIX(score, mask=mask)
+      mask = (par.EQ.5)
+      WHERE(mask)
+     &  rtot5 = SUM_PREFIX(score, mask=mask)
+
+!.... 4) Enumerate holes where a birdie was scored
+
+      mask = (score.EQ.(par - 1))
+      WHERE (mask)
+        birdie = 1  ! Use also as the source array
+        birdie = SUM_PREFIX(birdie, mask=mask)
+       END WHERE
+
+      WRITE (*,10) par, score, rtot, rsplit,
+     &             rtot3, rtot4, rtot5, birdie
+
+ 10   FORMAT(//
+     & tr15,' Golf statistics using Scan routines'/
+     & tr1,65('-')/
+     & '     par: ',18I3/
+     & '   score: ',18I3//
+     & '    rtot: ',18I3/
+     & '  sprtot: ',18I3/
+     & '   rtot3: ',18I3/
+     & '   rtot4: ',18I3/
+     & '   rtot5: ',18I3/
+     & '  birdie: ',18I3/)
+
+      END
+

@@ -1,0 +1,60 @@
+
+      PROGRAM life
+      IMPLICIT NONE
+
+! This code performs MAXLOOP iterations of an NxN life board
+!
+      INTEGER, PARAMETER :: N=8, MAXLOOP=10
+      INTEGER            :: loop
+      CHARACTER(LEN=10)  :: picfile
+
+! 1) Declare main arrays
+!
+
+
+
+! 2) Initialise board
+!
+
+
+
+! Print starting config to file life00.pgm
+!
+      WRITE(picfile, 20) 0
+ 20   FORMAT('life', i2.2, '.pgm')
+
+      OPEN(UNIT=10, FILE=picfile)
+      WRITE(10, FMT='(''P2'',/,i3,2x,i3,/,i3)') N, N, 1
+      WRITE(10,*) board
+      CLOSE(UNIT=10)
+
+! 3) Perform MAXLOOP updates
+!
+
+
+
+! 4) Count number of neighbours
+!
+
+
+
+! 5) Calculate new generation
+!
+
+
+
+! Write out new state of board
+!
+        WRITE(picfile, 20) loop
+        OPEN(UNIT=10, FILE=picfile)
+        WRITE(10, FMT='(''P2'',/,i3,2x,i3,/,i3)') N, N, 1
+        WRITE(10,*) board
+        CLOSE(UNIT=10)
+
+      END DO
+
+      END
+
+      
+
+

@@ -1,0 +1,41 @@
+
+      MODULE Funkt
+      CONTAINS
+       FUNCTION RAND (m)
+        INTEGER m
+        REAL, DIMENSION(m,m,m) :: RAND
+         CALL RANDOM_NUMBER(HARVEST = RAND)
+        RETURN
+       END FUNCTION RAND
+      END MODULE Funkt
+
+      PROGRAM TRANSITION
+      USE Funkt
+      IMPLICIT NONE
+       INTEGER, PARAMETER :: n = 16
+       INTEGER            :: iterations, i
+       LOGICAL, DIMENSION(n,n,n) :: ising,     flips
+       INTEGER, DIMENSION(n,n,n) :: ones,      count
+       REAL, DIMENSION(n,n,n)    :: threshold
+       REAL, DIMENSION(6)        :: p
+
+       p = (/ 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 /)
+
+       iterations  = 10
+       ising = RAND(n) .LE. 0.5
+
+       DO i = 1,iterations
+        ones = 0
+        WHERE (ising) ones = 1
+        count = CSHIFT(ones, -1, 1) + CSHIFT(ones, 1, 1) &
+              + CSHIFT(ones, -1, 2) + CSHIFT(ones, 1, 2) &
+              + CSHIFT(ones, -1, 3) + CSHIFT(ones, 1, 3)
+        WHERE (.NOT.ising) count = 6 - count
+        threshold = 1.0
+        WHERE (count == 4) threshold = p(4)
+        WHERE (count == 5) threshold = p(5)
+        WHERE (count == 6) threshold = p(6)
+        flips = RAND(n) .LE. threshold
+        WHERE (flips) ising = .NOT. ising
+       ENDDO
+      END PROGRAM TRANSITION

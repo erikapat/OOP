@@ -1,0 +1,58 @@
+PROGRAM Main
+ IMPLICIT NONE
+ INTEGER, PARAMETER :: n = 10
+ INTEGER, DIMENSION(n,n) :: A
+ INTEGER :: i, j
+
+ !HPF$ PROCESSORS :: P(5)
+ !HPF$ DSTRIBUTE A(*,CYCLIC) ONTO P
+
+  !HPF$ INDEPENDENT
+  FORALL(i=1:n, j=1:n) A(j,i) = i + (j-1)*n
+  DO i = 1, n
+   PRINT*, A(i,:)
+  END DO
+  PRINT*
+
+  !HPF INDEPENDENT
+  FORALL(i=1:n, j=1:n) A(j,i) = A(j,i)*(-1**(i+j))
+  DO i = 1, n
+   PRINT*, A(i,:)
+  END DO
+  PRINT*
+
+!! OR BETTER STILL: combine steps 2 and 3
+!!
+!! !HPF INDEPENDENT
+!! FORALL(i=1:n, j=1:n) A(j,i) = (i + (j-1)*n)*(-1**(i+j))
+
+  !HPF$ INDEPENDENT
+  FORALL(i = 0:6) A(4+i,1+i) = SUM(A(:,i+1))
+  DO i = 1, n
+   PRINT*, A(i,:)
+  END DO
+  PRINT*
+
+  !HPF$ INDEPENDENT
+  FORALL(i = 0:6) A(1+i,4+i) = SUM(A(:,4+i))
+  DO i = 1, n
+   PRINT*, A(i,:)
+  END DO
+  PRINT*
+
+  !HPF$ INDEPENDENT
+  FORALL(i = 0:6, (A(7-i,1+i) .LE. 15)) A(7-i,1+i) = SUM(A(:7-i,1+i))
+  DO i = 1, n
+   PRINT*, A(i,:)
+  END DO
+  PRINT*
+
+  !HPF$ INDEPENDENT
+  FORALL(i = 0:6, (A(4+i,n-i) .LE. 15)) A(4+i,n-i) = SUM(A(:4+i,n-i))
+  DO i = 1, n
+   PRINT*, A(i,:)
+  END DO
+  PRINT*
+
+END PROGRAM
+

@@ -1,0 +1,23 @@
+n=size(matriz1%ICF)-1
+print *,  n
+  do i=1,n
+     do j=matriz1%ICF(i), matriz1%ICF(i+1)-1
+	 val2=encontrar_elem(matriz2, i, matriz1%IC(j))
+	 matriz3%valor(j)=matriz1%valor(j)+val2
+	 end do
+  end do
+matriz3%IC=matriz1%IC
+matriz3%ICF=matriz1%ICF
+print *, "____________________________________________________________"
+
+print *, matriz3%valor(1:matriz1%no_nulos)  !!!!!
+print *, "____________________________________________________________"
+print *, matriz3%IC(1:matriz1%no_nulos)   !!!!
+print *, "____________________________________________________________"
+
+print *, matriz3%ICF(1:matriz3%fila+1)   !!!!
+
+
+!stop
+!99 stop "ERROR: NO SE PUDO LEER"
+99 print *, "ERROR: NO SE PUDO LEER"

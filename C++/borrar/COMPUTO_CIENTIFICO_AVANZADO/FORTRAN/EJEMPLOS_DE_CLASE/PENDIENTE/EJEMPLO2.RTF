@@ -1,0 +1,93 @@
+{\rtf1\adeflang1025 \ansi \deff0 \adeflang1033 {\fonttbl {\f0\froman Times New Roman;}
+{\f1\froman Times New Roman;}{\f2\froman Times New Roman;}{\f3\froman Times New Roman;}{\f4\froman Times New Roman;}{\f5\froman Times New Roman;}
+{\f6\froman Times New Roman;}{\f7\froman Times New Roman CE;}{\f8\froman Times New Roman CE;}{\f9\froman Times New Roman CE;}{\f10\froman Times New Roman CE;}
+{\f11\froman Times New Roman CE;}{\f12\froman Times New Roman CE;}{\f13\froman Times New Roman CE;}{\f14\froman Times New Roman Cyr;}{\f15\froman Times New Roman Cyr;}
+{\f16\froman Times New Roman Cyr;}{\f17\froman Times New Roman Cyr;}{\f18\froman Times New Roman Cyr;}{\f19\froman Times New Roman Cyr;}{\f20\froman Times New Roman Cyr;}
+{\f21\froman Times New Roman Tur;}{\f22\froman Times New Roman Tur;}{\f23\froman Times New Roman Tur;}{\f24\froman Times New Roman Tur;}{\f25\froman Times New Roman Tur;}
+{\f26\froman Times New Roman Tur;}{\f27\froman Times New Roman Tur;}{\f28\froman Times New Roman Greek;}{\f29\froman Times New Roman Greek;}{\f30\froman Times New Roman Greek;}
+{\f31\froman Times New Roman Greek;}{\f32\froman Times New Roman Greek;}{\f33\froman Times New Roman Greek;}{\f34\froman Times New Roman Greek;}{\f35\froman Times New Roman Baltic;}
+{\f36\froman Times New Roman Baltic;}{\f37\froman Times New Roman Baltic;}{\f38\froman Times New Roman Baltic;}{\f39\froman Times New Roman Baltic;}{\f40\froman Times New Roman Baltic;}
+{\f41\froman Times New Roman Baltic;}{\f42\fmodern MS LineDraw;}{\f43\fdecor Symbol;}}
+{\colortbl;\red0\green0\blue0;\red0\green0\blue127;\red0\green127\blue0;\red0\green127\blue127;\red127\green0\blue0;\red127\green0\blue127;\red127\green127\blue0;\red127\green127\blue127;\red192\green192\blue192;\red0\green0\blue255;\red0\green255\blue0;\red0\green255\blue255;\red255\green0\blue0;\red255\green0\blue255;\red255\green255\blue0;\red255\green255\blue255;}\linex0 \sbknone 
+\paperh16800 \paperw11916 \margl1440 \margr1451 \margt1440 \margb1434 \plain \headery1440 \fs20 \f0 \fs20 \f0 \lang2058 \fs20 \f0 \fs24 \f0 \b \linex0 \linemod0 \sbknone \headery1440 \pard \li323 \sl-0 \tx323 program prb
+\par \pard \sl-0 \tx323 
+\par \plain \lang2058 \pard \li340 \sl-266 \tx340 use mimod implicit none type(fila), pointer:: ml ,m2 type(cabecera) fi ,f2
+\par \pard \sl-266 \tx340 
+\par \pard \li345 \sl-0 \tx345 ml \fs12 \f1 \b > \fs24 \f2 \plain \f2 \lang2058 creafila(1.1,2.2,3.3)
+\par \fs24 \f0 \pard \li345 \sl-0 \tx345 m2 \fs12 \f1 \b => \fs24 \f2 \plain \f2 \lang2058 creafila(O.1,O.2,O.3)
+\par \pard \sl-0 \tx345 
+\par \fs24 \f0 \pard \li340 \fi-340 \sl-0 \tx340 ~\tab ~~ll
+\par \pard \li340 \sl-266 \tx340 eall imprime lista(ml)
+\par \pard \sl-266 \tx340 
+\par \pard \li340 \sl-266 \tx340 fl%head \fs12 \f1 \b > \fs24 \f2 \plain \f2 \lang2058 ml
+\par \fs24 \f0 \pard \li340 \sl-266 \tx340 12%head \fs12 \f1 \b => \fs24 \f2 \plain \f2 \lang2058 m2
+\par \pard \sl-266 \tx340 
+\par \fs24 \f0 \pard \li340 \sl-266 \tx340 suma \fs12 \f1 \b => \fs24 \f0 \plain \lang2058 fl+f2
+\par \pard \li340 \sl-266 \tx340 cali imprime lista(suma)
+\par \pard \sl-266 \tx340 
+\par \b \pard \li323 \sl-0 \tx323 end program prb
+\par \pard \sl-0 \tx323 
+\par 
+\par 
+\par 
+\par \pard \li323 \sl-0 \tx323 \'a1~iociu1e mimod
+\par \pard \sl-0 \tx323 
+\par \fs24 \f2 \plain \f2 \lang2058 \pard \li345 \sl-0 \tx345 impiicit none
+\par \pard \sl-0 \tx345 
+\par \fs24 \f0 \pard \li385 \sl-272 \tx385 type\'92~fila
+\par \pard \li385 \sl-272 \tx385 real valor type(fila), pointer:: sig end type \fs24 \f2 fila
+\par \pard \sl-272 \tx385 
+\par \fs24 \f0 \pard \li345 \sl-0 \tx345 type \fs24 \f2 cabecera
+\par \pard \li345 \sl-0 \tx345 type(fila), pointer:: head
+\par \fs24 \f0 \pard \li345 \sl-0 \tx345 end type \fs24 \f2 cabecera
+\par \pard \sl-0 \tx345 
+\par \fs24 \f0 \pard \li340 \sl-266 \tx340 type(fi la), pointer:: suma
+\par \pard \sl-266 \tx340 
+\par 
+\par \pard \li340 \sl-266 \tx340 interface operator(+)
+\par \pard \li340 \sl-266 \tx340 module procedure mif
+\par \pard \sl-266 \tx340 
+\par \pard \li340 \sl-266 \tx340 Fnd interface
+\par \pard \sl-266 \tx340 
+\par 
+\par \pard \li340 \sl-266 \tx340 contains
+\par \pard \sl-266 \tx340 
+\par 
+\par \pard \li340 \sl-266 \tx340 function creafila(val 1 ,val2,val3) result(ptr) real, intent(in) val 1 ,val2,val3
+\par \fs20 \f0 \fs20 \f0 \lang2058 \fs20 \f0 \fs24 \f0 \pard \sl-266 \tx204 type(fila), pointer:: ptr type(fila), pointer:: q,r
+\par 
+\par \pard \sl-266 \tx204 allocate(ptr)
+\par \pard \sl-266 \tx204 ptr%valor \fs12 \f1 \b = \fs24 \f0 \plain \lang2058 val 1
+\par \pard \sl-266 \tx204 allocate(q)
+\par \pard \sl-266 \tx204 q%valor \fs12 \f1 \b = \fs24 \f0 \plain \lang2058 val2
+\par \i \pard \sl-0 \tx204 ptr%sig \fs12 \f1 \plain \fs12 \f1 \lang2058 \b => \fs24 \f0 \plain \lang2058 \i q
+\par \fs24 \f2 \plain \f2 \lang2058 \pard \li113 \sl-0 \tx113 r \fs12 \f1 \b => \fs24 \f0 \plain \lang2058 \i q
+\par \pard \sl-0 \tx113 
+\par \plain \lang2058 \pard \sl-266 \tx204 allocate(q)
+\par \pard \sl-266 \tx204 q%valor \fs12 \f1 \b = \fs24 \f0 \plain \lang2058 val3
+\par \fs12 \f1 \b \pard \li113 \sl-0 \tx113 L/O~I~~~j
+\par \pard \sl-0 \tx113 
+\par \fs24 \f0 \plain \lang2058 \pard \sl-277 \tx204 \'f1ulaify(q\super 0\plain \lang2058 /dsig) \fs8 \f1 ~! \fs24 \f0 end function creafila
+\par 
+\par \pard \sl-266 \tx204 function mif(fila 1 ,fila2) result(ptr) type(cabecera), intent(in):: filal ,fila2 type(fila), pointer:: ptr type(fila), pointer :: \fs24 \f2 cbl,cb2,q,r
+\par 
+\par \fs24 \f0 \pard \sl-266 \tx204 cbl \fs12 \f1 \b => \fs24 \f0 \plain \lang2058 fllal%head ; cb2 \fs12 \f1 \b => \fs24 \f0 \plain \lang2058 fila2%head allocate(ptr)
+\par \pard \sl-266 \tx204 ptr%valor \fs12 \f1 \b = \fs24 \f2 \plain \f2 \lang2058 cb 1 %valor \fs18 \f1 + \fs24 \f0 cb2%valor allocate(q)
+\par \pard \sl-266 \tx204 q\super 0\plain \lang2058 /~valor \fs12 \f1 \b = \fs24 \f0 \plain \lang2058 cbl%sig%valor \fs18 \f1 + \fs24 \f0 cb2%sig%valor ptr%sig \fs12 \f1 \b => \fs24 \f0 \plain \lang2058 \b q
+\par \plain \lang2058 \pard \li136 \sl-0 \tx136 r=>q
+\par \pard \sl-266 \tx204 allocate(q)
+\par \pard \sl-266 \tx204 q\super 0\plain \lang2058 /qyalor =,.cb 1 %sig%sig%valor 4-~ cb2%sig%sig%vaIor r\super 0\plain \lang2058 /osig \fs12 \f1 \b > \fs24 \f0 \plain \lang2058 \b q
+\par \plain \lang2058 \pard \sl-266 \tx204 nullify(q%sig)
+\par \pard \sl-266 \tx204 end function mif
+\par 
+\par \pard \sl-266 \tx204 subroutine imprime_lista(ptr)
+\par \pard \sl-266 \tx204 type(fila), pointer :: ptr,actual
+\par 
+\par \fs24 \f2 \pard \li158 \sl-266 \tx158 print* \fs24 \f0 print*,\'94 Lista:
+\par \pard \sl-266 \tx204 actual \fs12 \f1 \b => \fs24 \f0 \plain \lang2058 ptr do while(associated(actual)) print* ,actual%valor
+\par \pard \li289 \sl-0 \tx289 a\'e9tual=>actual%sig
+\par \fs24 \f2 \pard \li158 \sl-266 \tx158 enddo
+\par \fs24 \f0 \pard \sl-266 \tx204 end subroutine imprime lista
+\par 
+\par \b \pard \sl-0 \tx204 end module min~od
+\par \fs20 \f0 \plain \fs20 \lang2058 }

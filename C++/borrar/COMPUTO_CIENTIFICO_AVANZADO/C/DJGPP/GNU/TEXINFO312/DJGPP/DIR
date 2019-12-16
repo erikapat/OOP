@@ -1,0 +1,59 @@
+This is the directory file `dir' a.k.a. `DIR', which contains the
+  topmost node of the Info hierarchy.
+This particular dir file is the minimal one, which is only good for
+  reading the documenation of the Texinfo programs.  It is made
+  available for those who don't have DJGPP installed (DJGPP comes with
+  a larger `DIR' file).
+
+
+File: dir,	Node: Top,	This is the top of the INFO tree.
+
+This is the Info main menu (aka directory node).
+A few useful Info commands:
+
+  `q'    quits;
+  SPC    (or PgDn) scrolls forward;
+  BS     (or PgUp) scrolls backward;
+  TAB    tabs to next hypertext link (reference/menu item);
+  RET    goes to hypertext link under cursor;
+  `l'    (that's a lower-case `ell') returns to last section;
+  `?'    lists all Info commands;
+  `h'    starts the Info tutorial;
+  `mTexinfo RET' visits the Texinfo manual, etc.
+
+  To choose from a menu, either TAB there and press RET, or move the
+  cursor to the line and press `m RET'.
+
+* Menu:
+
+
+* Info: (info).
+	Documentation browsing system.  This topic teaches you about
+	how to use the online help information.
+
+* Info-Standalone: (info-stnd).
+	This topic helps you use the standalone Info-Program (info.exe)
+
+* Texinfo: (texinfo).
+	With one source file, make either a printed manual
+	(through TeX) or an Info file (through makeinfo).
+	Full documentation in this menu item.
+
+* install-info: (texinfo)Invoking install-info. 
+	How to update info/dir entries when installing GNU packages.
+
+* texi2dvi: (texinfo)Format with texi2dvi.
+	Printing Texinfo documentation with TeX.
+
+* texindex: (texinfo)Format with tex/texindex.	
+	Sorting Texinfo index files automaically.
+
+* makeinfo: (texinfo)makeinfo options.
+	Translate Texinfo source into Info, plain ASCII, or HTML.
+
+
+
+Tag Table:
+Node: Top332
+
+End Tag Table

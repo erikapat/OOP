@@ -1,0 +1,77 @@
+      PROGRAM GAUSS_90
+      REAL, allocatable ::  A(:,:), X(:), Y(:), START(:)
+      INTEGER :: i
+      character*10 time
+
+      REAL TEMP
+      REAL, allocatable :: SWAP(:)
+
+      INTEGER j, n, location, location_array(1)
+
+      print *, "Problem size = ? (>5)"
+      read (*,*) n
+      print *, "Problem size = ", n
+      call date_and_time(time=time)
+      print *, time, "     ---- time to start the job"
+      allocate(a(n,n), x(n), y(n), start(n), swap(n))
+      A = 0.1
+      DO i=1,n
+        START(i) = i
+        A(1+MODULO(i+1,n),i) = i+5
+      ENDDO
+      Y = 0
+      DO i = 1, n
+        Y(i) = SUM( A(i,:)*START )
+      ENDDO
+
+      call date_and_time(time=time)
+      print *, time, "     ---- problem has been set up"
+
+      !CALL GAUSS_ELIM_90( A, X, Y )
+
+       DO i = 1, n-1
+
+! Between here >>
+!-------------------------------------------------+
+         location_array = MAXLOC( ABS(A(i:n,i)) ) !
+         location = location_array(1)+i-1         !
+         SWAP(i:n) = A(location,i:n)              !
+         TEMP = Y(location)                       !
+         IF (location /= i) THEN                  !
+           A(location,i:n) = A(i,i:n)             !
+           A(i,i:n) = SWAP(i:n)                   !
+           Y(location) = Y(i)                     !
+           Y(i) = TEMP                            !
+         END IF                                   !
+!-------------------------------------------------+
+! << and here
+
+         DO j = i+1, n
+            A(j,i) = A(j, i) / swap(i)
+            A(j, i+1:n) = A(j, i+1:n ) - a(j, i) * SWAP(i+1:n)
+            Y(j) = Y(j) - a(j,i) * TEMP
+         ENDDO
+       ENDDO
+
+       call date_and_time(time=time)
+       print *, time, "     ---- forward finished "
+
+       X(n) = Y(n) / A(n,n)
+       DO i = n-1, 1, -1
+         Y(1:i) = Y(1:i) - X(i+1) * A(1:i, i+1)
+         X(i) = Y(i) / A(i,i)
+       ENDDO
+
+      call date_and_time(time=time)
+      print *, time, "     ---- problem has been solved"
+
+      DO i = 1, 5
+        WRITE(*,*) i, X(i)
+      ENDDO
+
+      DO i = n - 4, n
+        WRITE(*,*) i, X(i)
+      ENDDO
+
+      END PROGRAM GAUSS_90
+

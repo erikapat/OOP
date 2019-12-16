@@ -1,0 +1,126 @@
+
+!TAREA 2
+!
+!PROGRAMA PRINCIPAL: matriz_triangular_sup.f90
+!CREADO POR: Erika Gomes, 0032832
+
+!Resolución de un sistema lineal AX=b, de matriz triangular inferior, 
+!mediante sustitución progresiva
+program matriz_triangular_sup
+
+implicit none
+!*********************************DECLARACIONES*******************************!
+!ESTRUTURA 
+type fila
+real, dimension(:), pointer ::r
+end type fila
+!Declaración de una variable tipo fila
+type(fila),dimension(:), allocatable::a
+real, dimension(:), allocatable::b, x !array dinámico
+integer::i,j,n, ios
+real:: suma
+character(len=25):: arch_matriz
+!*******************************ESPECIFICACIONES*****************************!
+!Se imprime en pantalla la descripción del programa
+print '(//,16x,(a))', '********************************************'
+print '(16x,(a))', '*                                          *'
+print '(16x,(a))', '*                                          *'
+print '(16x,(a))', '*       Resoluci¢n de un sistema lineal    *'
+print '(16x,(a))', '*                  AX = b                  *'
+print '(16x,(a))', '*       de matriz A triangular  inferior,  *'
+print '(16x,(a))', '*       mediante sustituci¢n progresiva    *'
+print '(16x,(a))', '*                                          *'
+print '(16x,(a))', '*                                          *'
+print '(16x,(a))', '********************************************'
+print '(//)'!DOBLE ESPACIO
+print '(32x,(a))', '*** ENTRADA *** '
+print '(/)'! ESPACIO
+!******************************** LECTURA ***********************************!
+
+!abrir archivo:
+print '(16x,(a),\)', 'Nombre de Archivo (con su extensi¢n): ' 
+read *,arch_matriz 
+print '(/)'! ESPACIO
+open(unit=1,file=arch_matriz, status="old", action="read",err=99)
+!Lee la dimensión de la matriz
+read(1,*,iostat=ios)n
+!si no se encuentra el archivo o este esta vacío se produce un error
+if (ios/=0) then
+  close(1)
+  stop "ERROR: NO HUBO LECTURA (!Verifique que el archivo a leer exista!)"
+end if
+if (n<=1) then
+  close(1)
+  stop "ERROR: DIMENSI¢N MENOR O IGUAL A 1"
+end if
+!Imprime el valor de n leido
+print '(16x,(a),\)', 'DIMENSI¢N:'
+print *, n
+
+!************************* MATRIZ TRIANGULAR INFERIOR***********************!
+!reserva espacio para a
+allocate(a(n))
+
+do i=1,n
+  allocate(a(i)%r(1:i))
+end do
+!Lectura de la matriz triangular inferior
+do i=1,n
+      read(1,*,iostat=ios)a(i)%r(1:i) !lee cada una de las líneas de archivo como
+	  !una fila de la matriz a 
+	  if (ios/=0) stop "ERROR: error de lectura"!error de lectura
+	  !ERROR: DIAGONALES = 0
+	  if (a(i)%r(i)==0) stop "ERROR: Los elementos de la diagonal deben ser distintos de cero"
+end do 
+!Imprimo para verificar si todo ok!!
+print '(/,16x,(a),/)', 'MATRIZ TRIANGULAR INFERIOR:'
+do i=1,n
+  print '(\,16x,(a))',''
+  print *,(a(i)%r(1:i))
+end do
+!***************************** VECTOR b ***********************************!
+allocate(b(n))!reservo espacio para el array dinámico b
+!LEO DEL ARCHIVO b
+do i=1,n
+   read(1,*,iostat=ios)b(i)
+   if (ios/=0) stop "ERROR: error de lectura"!ERROR DE LECTURA
+end do
+print '(//)'!DOBLE ESPACIO
+print '(16x,(a),/)', 'b ->: '
+do i=1,n
+   print '(16x,(a),\)',''
+   print * ,b(i)!IMPRIMO b PARA VERIFIVCAR QUE TODO OK
+end do
+close(1)
+
+!*************************SUSTITUCIÓN PROGRESIVA******************************!
+allocate(x(n)) !reservo espacio para el vector solución x
+x(1)=b(1)/a(1)%r(1) !primer elemento del vector solución
+do i=2,n
+   suma=b(i) 
+   do j=1,i-1
+      suma=suma-a(i)%r(j)*x(j)
+   end do
+   x(i)=suma/a(i)%r(i)
+end do
+!****************************    SOLUCION*  **********************************!
+print '(//)'!DOBLE ESPACIO
+print '(32x,(a))', '*** SALIDA *** '
+print '(//,16x,(a)  )', '********************************************'
+print '(16x,(a)     )', '*                                          *'
+print '(16x,(a)     )', '**               RESULTADOS:              **'
+print '(16x,(a)     )', '*                    X =                   *'
+print '(16x,(a)     )', '*                                          *'
+do i=1,n
+   print '(32x,(a),\)',''
+   print *,x(i)!IMPRIMO x 
+end do
+print '(16x,(a)     )', '*                                          *'
+print '(16x,(a)  )', '********************************************'
+print '(//)'!DOBLE ESPACIO
+print '(//)'!DOBLE ESPACIO
+
+!*****************************************************************************!
+stop
+99 stop "ERROR AL INTENTAR ABRIR EL ARCHIVO"!error al intentar abrir el archivo
+end program matriz_triangular_sup !fin

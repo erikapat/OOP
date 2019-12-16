@@ -1,0 +1,100 @@
+      MODULE Processor_Grid
+       !HPF$ PROCESSORS, DIMENSION(2,2)   :: square
+      END MODULE Processor_Grid
+
+      PROGRAM life_subroutine
+       USE Processor_Grid
+        IMPLICIT NONE
+        INTEGER, PARAMETER                   :: N=32 ! board size
+        INTEGER, PARAMETER                   :: MAXLOOP=2 ! Iterations
+        INTEGER, DIMENSION(N,N)              :: board
+  !HPF$ DISTRIBUTE (BLOCK,BLOCK) ONTO square :: board
+
+        CHARACTER*(10) picfile
+
+        INTERFACE
+         SUBROUTINE update_life(board, iterations)
+          USE Processor_Grid
+          INTEGER, DIMENSION(:,:), INTENT(INOUT) :: board
+          INTEGER,                 INTENT(IN)    :: iterations
+          INTEGER, DIMENSION(SIZE(board,1),SIZE(board,2)) :: neighbours
+    !HPF$ ALIGN (:,:) WITH board(:,:)            :: neighbours
+    !HPF$ DISTRIBUTE *(BLOCK,BLOCK) ONTO *square :: board
+         END SUBROUTINE update_life
+        END INTERFACE
+
+! Initialise board
+
+       board = 0
+       board(N/2,:) = 1
+       board(:,N/2) = 1
+
+! Print starting config to file life00.pgm
+
+       WRITE(picfile, 20) 0
+ 20    FORMAT('life', i2.2, '.pgm')
+
+       OPEN(UNIT=10, FILE=picfile)
+       WRITE(10, FMT='(''P2'',/,i3,2x,i3,/,i3)') N, N, 1
+       WRITE(10,*) board
+       CLOSE(UNIT=10)
+
+! Perform MAXLOOP updates
+
+       CALL update_life(board, MAXLOOP)
+
+
+      END
+
+
+      SUBROUTINE update_life(board, iterations)
+       USE Processor_Grid
+       IMPLICIT NONE
+       INTEGER, DIMENSION(:,:), INTENT(INOUT) :: board
+       INTEGER,                 INTENT(IN)    :: iterations
+       INTEGER, DIMENSION(SIZE(board,1),SIZE(board,2)) :: neighbours
+ !HPF$ ALIGN (:,:) WITH board(:,:)            :: neighbours
+ !HPF$ DISTRIBUTE *(BLOCK,BLOCK) ONTO *square :: board
+
+       INTEGER loop
+
+       CHARACTER*(10) picfile
+
+       DO loop = 1, iterations
+
+! Count number of neighbours
+!
+        neighbours =
+     &    CSHIFT(board, SHIFT= 1, DIM=1) +
+     &    CSHIFT(board, SHIFT=-1, DIM=1) +
+     &    CSHIFT(board, SHIFT= 1, DIM=2) +
+     &    CSHIFT(board, SHIFT=-1, DIM=2) +
+     &    CSHIFT(CSHIFT(board, SHIFT= 1, DIM=2), SHIFT= 1, DIM=1) +
+     &    CSHIFT(CSHIFT(board, SHIFT= 1, DIM=2), SHIFT=-1, DIM=1) +
+     &    CSHIFT(CSHIFT(board, SHIFT=-1, DIM=2), SHIFT= 1, DIM=1) +
+     &    CSHIFT(CSHIFT(board, SHIFT=-1, DIM=2), SHIFT=-1, DIM=1)
+
+! Calculate new generation
+!
+       WHERE (neighbours.lt.2 .or. neighbours.gt.3)
+        board = 0
+       END WHERE
+       WHERE (neighbours.eq.3)
+        board = 1
+       END WHERE
+
+! Write out new state of board
+!
+        WRITE(picfile, 20) loop
+ 20     FORMAT('life', i2.2, '.pgm')
+        OPEN(UNIT=10, FILE=picfile)
+        WRITE(10, FMT='(''P2'',/,i3,2x,i3,/,i3)')
+     &        SIZE(board,1), SIZE(board,2), 1
+        WRITE(10,*) board
+        CLOSE(10)
+
+      END DO
+
+      END SUBROUTINE
+
+

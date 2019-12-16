@@ -1,0 +1,98 @@
+
+                
+
+                ARCHIVO : data.txt                 
+
+                ****** SUMA DE MATRICES  *******
+
+          Numero de elementos no nulos: 
+           6
+
+          Numero de filas: 
+           3
+
+          Numero de columnas: 
+           3
+
+          Vector de elementos no nulos: 
+   3.000000       5.000000       5.000000       2.000000       4.000000    
+   5.000000    
+
+          Vector IC: 
+           1           3           1           2           1           2
+
+          Vector ICF
+           1           3           5           7
+ *****************************************************************
+
+                ****** RESTA DE MATRICES  *******
+
+          Numero de elementos no nulos: 
+           6
+
+          Numero de filas: 
+           3
+
+          Numero de columnas: 
+           3
+
+          Vector de elementos no nulos: 
+  -1.000000      -3.000000      -5.000000       2.000000       4.000000    
+  -5.000000    
+
+          Vector IC: 
+           1           3           1           2           1           2
+
+          Vector ICF
+           1           3           5           7
+ *****************************************************************
+
+                ****** MULTIPLICACION DE MATRICES  *******
+
+                MATRIZ 2 * MATRIZ 1 = 
+
+          Numero de elementos no nulos: 
+           5
+
+          Numero de filas: 
+           3
+
+          Numero de columnas: 
+           3
+
+          Vector de elementos no nulos: 
+   18.00000       2.000000       5.000000       5.000000       10.00000    
+
+          Vector IC: 
+           1           3           1           3           2
+
+          Vector ICF
+           1           3           5           6
+ *****************************************************************
+
+                ****** ASIGNACION DE MATRICES  *******
+
+          Numero de elementos no nulos: 
+           4
+
+          Numero de filas: 
+           3
+
+          Numero de columnas: 
+           3
+
+          Vector de elementos no nulos: 
+   1.000000       1.000000       2.000000       4.000000    
+
+          Vector IC: 
+           1           3           2           1
+
+          Vector ICF
+           1           3           4           5
+ *****************************************************************
+
+                ****** COMPARACION *******
+
+                 SON IGUALES 
+
+                *******************************

@@ -1,0 +1,9 @@
+ (/,16x,(a))****** SUMA DE MATRICES  *******
+ Numero de elementos no nulos:            6
+ Numero de filas:            3
+ Numero de columnas:            3
+ Vector de elemntos no nulos:    3.000000       5.000000       5.000000    
+   2.000000       4.000000       5.000000    
+ Vector IC:            1           3           1           2           1
+           2
+ Vector ICF           1           3           5           7

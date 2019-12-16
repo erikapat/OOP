@@ -1,0 +1,25 @@
+     REAL, DIMENSION(:,:), ALLOCATABLE :: A
+     REAL, DIMENSION(:), ALLOCATABLE :: Pr
+!HPF$ PROCESSORS Q(4)
+!HPF$ DISTRIBUTE A(CYCLIC,*) ONTO Q
+!HPF$ DISTRIBUTE Pr(CYCLIC) ONTO Q
+      PRINT*, "Type in array size"
+      READ*, n
+      ALLOCATE(A(n,n),STAT=ierr)
+      IF (ierr .EQ. 0) THEN
+       ALLOCATE(Pr(n),STAT=ierr)
+       IF (ierr .EQ. 0) THEN
+        Pr = 1
+        CALL RANDOM_NUMBER(A)
+        DO i=1,n
+         DO j=1,n
+          Pr(i) = Pr(i) * A(i,j)
+         END DO
+        END DO
+       PRINT*, Pr
+       DEALLOCATE(Pr)
+      END IF
+      DEALLOCATE(A)
+     END IF
+    END PROGRAM
+

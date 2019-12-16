@@ -1,0 +1,46 @@
+PROGRAM golf
+
+! Include HPF library
+!
+      USE hpf_library
+      IMPLICIT NONE
+      INTEGER, PARAMETER :: nhole=18
+! Declare arrays
+!
+      INTEGER, DIMENSION(nhole) :: score = &
+         (/5,3,4,4,4,2,3,5,6,2,5,4,3,4,4,4,7,3/)
+      INTEGER, DIMENSION(nhole) :: par =   &
+         (/4,4,4,4,4,4,3,4,4,4,3,4,3,5,3,4,5,4/)
+      INTEGER, DIMENSION(nhole) :: rtot,rsplit,
+     &                             rtot3,rtot4,rtot5,birdie
+      LOGICAL, DIMENSION(nhole) :: smask,mask
+      INTEGER i
+
+! Distribute and align arrays
+!
+!.... 1) add directives
+
+! Initializations
+!
+!.... 2) Find running total
+!
+!.... 3) Find running total per 9 holes
+!
+!.... 4) Find running total for par 3, 4 and 5 holes
+!
+!.... 5) Enumerate holes where a birdie was scored
+!
+        WRITE(*,10) par, score, rtot, rsplit,
+     &             rtot3, rtot4, rtot5, birdie
+ 10   FORMAT(//
+     & tr15,' Golf statistics using Scan routines'/
+     & tr1,65(`-')/
+     & `     par: `,18I3/
+     & `   score: `,18I3//
+     & `    rtot: `,18I3/
+     & `   rtot3: `,18I3/
+     & `   rtot4: `,18I3/
+     & `   rtot5: `,18I3/
+     & `  birdie: `,18I3/)
+      END
+

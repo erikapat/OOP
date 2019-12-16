@@ -1,0 +1,69 @@
+PROGRAM Main
+ IMPLICIT NONE
+ INTEGER, PARAMETER :: n = 10
+ INTEGER, DIMENSION(n,n) :: A
+ INTEGER :: i, j
+
+ !HPF$ PROCESSORS :: P(5)
+ !HPF$ DSTRIBUTE A(*,CYCLIC) ONTO P
+
+
+  !HPF INDEPENDENT, NEW(j)
+  DO i = 1, n
+   DO j = 1, n
+    A(j,i) = i + (j-1)*n
+   END DO
+  END DO
+  DO i = 1, n
+   PRINT*, A(i,:)
+  END DO
+  PRINT*
+
+  !HPF INDEPENDENT, NEW(j)
+  DO i = 1, n
+   DO j = 1, n
+    A(j,i) = A(j,i)*(-1**(i+j))
+   END DO
+  END DO
+  DO i = 1, n
+   PRINT*, A(i,:)
+  END DO
+  PRINT*
+
+  !HPF$ INDEPENDENT
+  DO i = 0, 6
+   A(4+i,1+i) = SUM(A(:,i+1))
+  END DO
+  DO i = 1, n
+   PRINT*, A(i,:)
+  END DO
+  PRINT*
+
+  !HPF$ INDEPENDENT
+  DO i = 0, 6
+   A(1+i,4+i) = SUM(A(:,4+i))
+  END DO
+  DO i = 1, n
+   PRINT*, A(i,:)
+  END DO
+  PRINT*
+
+  DO i = 0, 6
+   IF (A(7-i,1+i) .LE. 15) A(7-i,1+i) = SUM(A(:7-i,1+i))
+  END DO
+  DO i = 1, n
+   PRINT*, A(i,:)
+  END DO
+  PRINT*
+
+  DO i = 0, 6
+   IF (A(4+i,n-i) .LE. 15) A(4+i,n-i) = SUM(A(:4+i,n-i))
+  END DO
+  DO i = 1, n
+   PRINT*, A(i,:)
+  END DO
+  PRINT*
+
+END PROGRAM
+
+

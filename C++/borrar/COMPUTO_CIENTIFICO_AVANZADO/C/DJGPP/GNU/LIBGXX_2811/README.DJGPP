@@ -1,0 +1,176 @@
+This is the port of GNU libg++ 2.8.1.1 to DJGPP. It comes as usual 
+for DJGPP in different zip-archives:
+
+  lgp2811s.zip  - the sources, already configured
+  lgp2811b.zip  - the library libgpp.a (on unix it is libg++.a) together
+                  with the needed headers, some utility programs and the
+                  docs.
+
+The library libstdcxx.a (on unix libstdc++.a) is part of the gpp281b.zip
+archive since it has other copying restricions and should be part of the
+C++ compiler.
+
+Requirements for libgpp2811b.zip
+===============================
+
+To use the GNU libg++ library you need at first a working base DJGPP
+installation (read the README.1ST) and the gcc281b.zip and gpp281b.zip
+archives.
+
+Installing libgpp281b.zip
+=========================
+
+Install the archive like any other DJGPP archive. For more information
+about this, please consult the DJGPP FAQ and the file README.1ST from
+the base DJGPP distribution.
+
+What is different in the DJGPP version of libg++?
+=================================================
+
+Because of the DOS filename limitation to 8+3 characters and no
+case sensetive filenames it was needed to change some filenames
+because they conflict either files from the same package or from
+others. The renamed files are the following:
+
+String.h    -> _String.h
+Complex.h   -> _Complex.h
+Regex.h     -> _Regex.h
+
+Please read also the README.DJGPP from gcc281b.zip (or gcc281s.zip) 
+about the tricks with that naming conventions.
+
+Note here, that I used mixed case filenames too after renaming, since
+under Windows 95 it is possible to use them in that way.
+
+If you want to use libg++ under Windows 95 with the long filenames
+enabled, you should unzip the archive with a program, which supports
+long filenames.
+
+If you want to use the library in both cases (long filenames/short filenames)
+under Windows 95, you should use at first also an unzipper which preserves
+the long filenames, but you should disable (at least for the installation
+process) the default namenumeric tail which Windows 95 uses for the short
+DOS filenames. For more information how to do this, please read the DJGPP
+FAQ (search there for NameNumericTail).
+
+Building libg++ for DJGPP
+=========================
+
+The sources for libg++ are in the archive libgpp280s.zip. They do _NOT_
+conatain all the files, which are part of the original libg++ distributon.
+Some (or many) unneded files are removed to save disk space.
+
+The sources are already configured to be build in a directory different
+than the source directory. They will be build in the "build.djg" subdirectory.
+
+Since there were needed some tricks to get the make and configuring process
+work on DJGPP Robert Hoehne wrote two small shell scripts, which should be 
+used always as replacements for the make or configure step. I only slightly
+modified them. That means, instead of typing
+
+make [additional-arguments]
+
+you should use
+
+sh djmake.sh [additional-arguments]
+
+and the same for configure which is replaced by djconfig.sh.
+
+
+Library sources are already configured so it may be not necessary 
+to run djconfig.sh.
+
+sh djconfig.sh 			- configure sources
+sh djmake.sh all		- compile libraries
+sh djmake.sh check		- compile and run test programs (The only one
+				  that failed for me is tGetOpt.exe in tests
+				  of libg++. But this failure is NOT significant
+				  for normal work of library)
+sh djmake.sh info		- make info files (I'm afraid will not work
+				  without LFN support)
+sh djmake.sh install prefix=... - install to user specified directory. I don't
+				  recommend to install directly to DJGPP 
+				  directory as You will nead to move or
+			          rename rather many files and directories
+sh djmake.sh install-info prefix=... install info files
+
+Here is info about failure of check I had:
+-----------------------------------------------
+gcc -c -g -O2 -nostdinc++ -I. -I../../libio -I../../../../libgpp/tests -I../../../../libgpp/tests/../../libio -I../../../../libgpp/tests/../../libstdcxx -I../../../../libgpp/tests/../src   ../../../../libgpp/tests/tGetOpt.cc
+gcc  tGetOpt.o -o tGetOpt -L./../ -L./../../libstdcxx -lgpp -lstdcxx
+./tGetOpt -abc -de10 -2000 -h3i \
+  <../../../../libgpp/tests/tGetOpt.inp >tGetOpt.out 2>&1
+diff -b ../../../../libgpp/tests/tGetOpt.exp tGetOpt.out
+1,2c1,2
+< ./tGetOpt: unrecognized option `-h'
+< ./tGetOpt: unrecognized option `-i'
+---
+> c:/libstdcxx/gnu/libgxx-2.81/build.djg/libraries/libgpp/tests/tGetOpt: unrecognized option `-h'
+> c:/libstdcxx/gnu/libgxx-2.81/build.djg/libraries/libgpp/tests/tGetOpt: unrecognized option `-i'
+make.exe[3]: *** [check-tGetOpt] Error 1
+-----------------------------------------------
+As it can seen the only difference is that I got full path of ./tGetOpt
+instead of ./tGetOpt. I cannot fix tGetOpt.exp as I don't know where sources
+will be installed. A possible workaround for this problem is to copy 
+file tGetOpt.out over tGetOpt.exp.
+
+
+Requirememnts for building libg++ for DJGPP
+===========================================
+
+You will probably need gcc 2.8.1 to build it. I haven't tried it with gcc 2.7.x
+but since gcc 2.8.1 is available as precompiled binary this is not a limitation.
+Building with gcc 2.8.0 is not recommended as You may have problems later
+after upgrade to gcc-2.8.1. 
+
+In addition to this you will need many GNU utilities from the text-, shell- and
+file-utility archives (txt???b.zip, shl???b.zip and fil???b.zip, where ??? stand
+for the version digits). You will also need some basic programs like sed and
+gawk.
+
+I'm not sure all will work without LFN support. I have not tested this.
+I think that './djmake.sh install' will NOT work without LFN support. 
+Therefore I recommend Windows 95 for building libstdc++ and libg++ from 
+sources.
+
+
+Changes against the original libg++ distribution
+================================================
+
+I had to rename some files because of filename conflicts when seeing them
+as 8+3 shorted filename and/or because of DOS-illegal filenames.
+
+All the files, which I have patched are still in the archive with the same name
+but appended a "~" or a ".~". So changing to the base source directory and doing
+there
+
+ls .../*~
+
+should tell you all the files which I have changed.
+
+
+Reporting bugs
+==============
+
+Please do _NOT_ report your bugs to me or comp.os.msdos.djgpp (at least
+not only) but send them to the address mentioned in the README file.
+
+If you found a bug in the DJGPP port of the library (which is a bug, which
+will occour only on the DJGPP version) then you should report it to
+comp.os.msdos.djgpp.
+
+
+Credits
+=======
+
+Big thanks to Robert H”hne <robert.hoehne@gmx.net> for port of 
+libstdc++ 2.8.0 and libg++ 2.8.0 that was used as base for this 
+port. Also this file is a modified version of his readme file
+from that port
+
+
+Happy programming
+
+Andris Pavenis <pavenis@lanet.lv>
+
+

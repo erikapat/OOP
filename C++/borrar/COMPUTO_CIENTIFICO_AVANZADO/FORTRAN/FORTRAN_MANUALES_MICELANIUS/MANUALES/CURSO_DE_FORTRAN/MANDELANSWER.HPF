@@ -1,0 +1,61 @@
+      PROGRAM mandel
+      IMPLICIT NONE
+
+      INTEGER, PARAMETER :: N=64, RESOLUTION=255
+
+      INTEGER :: i, j, start, stop
+
+      INTEGER, DIMENSION(N,N) :: colour
+      REAL, DIMENSION(N,N)      :: zr, zi, cr, ci, zrs, zis
+
+!HPF$ DISTRIBUTE (BLOCK,BLOCK) :: zr, zi, cr, ci, zrs, zis, colour
+
+! Initialise zr and zi using FORALL
+!
+      FORALL (i=1:n, j=1:n)
+        zr(i,j) = REAL(i-1)/REAL(n-1)
+        zi(i,j) = REAL(j-1)/REAL(n-1)
+      END FORALL
+
+! Initialise other arrays
+!
+      cr = zr
+      ci = zi
+
+      zrs = zr*zr
+      zis = zi*zi
+
+      colour = 0
+
+      CALL SYSTEM_CLOCK(start)
+      WRITE(*,*) start
+
+! Main loop
+!
+      DO i = 0, RESOLUTION
+
+        WHERE ((zrs + zis) .le. 4.0)
+
+          zrs = zr*zr
+          zis = zi*zi
+
+          zi = 2.0*zr*zi + ci
+          zr = zrs - zis + cr
+
+          colour = i
+        END WHERE
+
+      END DO
+
+      CALL SYSTEM_CLOCK(stop)
+      WRITE(*,*) stop-start
+
+! Open output file
+!
+      OPEN(UNIT=10, FILE='mandel.pgm')
+      WRITE(10, FMT='(''P2'',/,i3,2x,i3,/,i3)') N, N, RESOLUTION
+      WRITE(10,*) colour
+      CLOSE(UNIT=10)
+
+      END
+

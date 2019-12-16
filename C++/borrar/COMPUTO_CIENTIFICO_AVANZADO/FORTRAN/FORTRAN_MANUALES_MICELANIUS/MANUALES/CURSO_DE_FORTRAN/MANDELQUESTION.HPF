@@ -1,0 +1,41 @@
+
+      PROGRAM mandel
+      IMPLICIT NONE
+
+      INTEGER, PARAMETER :: N=64, RESOLUTION=255
+
+! 1) Declare main arrays
+!
+
+
+
+! 2) Initialise cr and ci using FORALL
+!
+
+
+
+! 3) Initialise other arrays
+!
+
+
+
+! 4) Main loop: RESOLUTION number of iterations
+!
+
+
+
+! 5) Work: Fortran 90 translation of given FORTRAN 77 code
+!
+
+
+
+! Open output file
+!
+      OPEN(UNIT=10, FILE='mandel.pgm')
+      WRITE(10, FMT='(''P2'',/,i3,2x,i3,/,i3)') N, N, RESOLUTION
+      WRITE(10,*) colour
+      CLOSE(UNIT=10)
+
+      END
+
+

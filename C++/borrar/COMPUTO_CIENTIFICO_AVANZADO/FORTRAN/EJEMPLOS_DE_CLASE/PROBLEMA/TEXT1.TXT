@@ -1,0 +1,9 @@
+!allocate(punt)
+!punt%valor=5
+!punt%indice_columna=2
+!actual=>punt%sig
+!allocate(actual)
+!actual%valor=50
+!actual%indice_columna=20
+!print*, punt%valor, punt%indice_columna
+!print*, actual%valor, actual%indice_columna

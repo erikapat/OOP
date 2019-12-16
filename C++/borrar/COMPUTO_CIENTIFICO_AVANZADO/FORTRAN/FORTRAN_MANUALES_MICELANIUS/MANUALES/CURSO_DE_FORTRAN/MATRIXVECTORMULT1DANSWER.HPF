@@ -1,0 +1,26 @@
+PROGRAM Main
+ IMPLICIT NONE
+ INTEGER :: n
+ INTEGER :: i
+ REAL, ALLOCATABLE, DIMENSION(:,:) :: A
+ REAL, ALLOCATABLE, DIMENSION(:)   :: x, y
+
+!HPF$ PROCESSORS, DIMENSION(4)    :: P
+!HPF$ ALIGN (:) WITH A(*,:)       :: X
+!HPF$ ALIGN (:) WITH A(:,*)       :: Y
+!HPF$ DISTRIBUTE(CYCLIC,*) ONTO P :: A
+
+  PRINT*, "Type in the size of matrix"
+  READ*, n
+  ALLOCATE (A(n,n))
+  ALLOCATE (x(n))
+  ALLOCATE (y(n))
+  CALL RANDOM_NUMBER(A)
+  CALL RANDOM_NUMBER(X)
+  DO I = 1,n
+   Y(i) = DOT_PRODUCT(A(i,:),X(:))
+  END DO
+  PRINT*,Y
+  DEALLOCATE(A,x,y)
+END PROGRAM
+

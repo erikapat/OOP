@@ -1,0 +1,18 @@
+      PROGRAM birthdays
+      IMPLICIT NONE
+      INTEGER, PARAMETER :: n=1000
+      INTEGER, DIMENSION(n,2) :: dob
+      INTEGER, DIMENSION(n)   :: days
+      REAL, DIMENSION (n) :: rand
+      INTEGER i
+      INTEGER, DIMENSION(12) :: days_in_month = &
+       (/31,28,31,30,31,30,31,31,30,31,30,31/)
+      INTEGER, DIMENSION(12) :: days_so_far
+!     ...
+!     Fill in this part
+!     ...
+      PRINT 1,dob(:15,1),dob(:15,2),days(:15)
+ 1    FORMAT(' DOB: month : ',15i4/
+     &       ' DOB:   day : ',15i4/
+     &       '       days : ',15i4/)
+      END
