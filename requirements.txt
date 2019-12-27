@@ -1,0 +1,4 @@
+#requirements for python examples
+absl-py==0.8.1
+pyspark==2.4.4
+numpy
